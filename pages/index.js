@@ -1,65 +1,68 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { firebase } from '../firebase/firebaseClient.js';
+import axios from 'axios';
+import { Form, Button } from "react-bootstrap";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    const { register, handleSubmit } = useForm();
+    const { errorMsg, setErrorMsg } = useState("");
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+    function checkIfAdmin(idToken) {
+        axios.post('/api/auth/login', { idToken })
+            .then(res => {
+                if (res.status === 200) {
+                    refreshToken().then(() => window.location.href = "/dashboard");
+                } else if (res.status === 401) {
+                    setErrorMsg("You don't have permission for this page");
+                } else {
+                    setErrorMsg("Something went wrong...");
+                }
+            });
+    }
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+    function handleLogin({ email, password }) {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                refreshToken().then(idToken => {
+                    checkIfAdmin(idToken);
+                })
+            })
+            .catch(err => setErrorMsg(err));
+    }
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+    return (
+        <div className={styles.container}>
+            <Head>
+                <title>Snapshop - Admin</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+            <Form>
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Enter email" />
+                    <Form.Text className="text-muted">
+                        We'll never share your email with anyone else.
+                    </Form.Text>
+                </Form.Group>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+                <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" />
+                </Form.Group>
+                <Form.Group controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Remember Me" />
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                    Submit
+                </Button>
+            </Form>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+    )
 }
