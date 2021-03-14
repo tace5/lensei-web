@@ -1,11 +1,10 @@
 
-// Code used: https://github.com/colinhacks/next-firebase-ssr/blob/master/auth.tsx
+// Code used: https://github.com/colinhacks/next-firebase-ssr/blob/master
 
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 
-// TODO: Change strings to environment variables instead
-if (typeof window !== 'undefined' && !firebase.apps.length) {
+if (typeof window !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp({
         apiKey: "AIzaSyAqdE4C87tUtAZ7gMkV6RAh0GREAPJk_18",
         authDomain: "solution-challenge-2021-1f487.firebaseapp.com",
@@ -15,7 +14,12 @@ if (typeof window !== 'undefined' && !firebase.apps.length) {
         appId: "1:393961054342:web:ad21341a754afa3f8bb107",
         measurementId: "G-SFWGBNN3T7"
     });
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
+    firebase
+        .auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
+    window.firebase = firebase;
 }
 
 export { firebase };
