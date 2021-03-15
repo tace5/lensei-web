@@ -7,8 +7,6 @@ import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 export default function Home() {
     const { register, handleSubmit } = useForm();
 
