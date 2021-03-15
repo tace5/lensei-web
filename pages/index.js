@@ -6,11 +6,13 @@ import styles from '../styles/Home.module.css'
 import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
+import { useAuth } from '../firebase/auth';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
     const { register, handleSubmit } = useForm();
+    const { user } = useAuth();
 
     const checkIfAdmin = (idToken) => {
         axios.post('/api/auth/login', { idToken })
