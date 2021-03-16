@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import nookies from "nookies";
 import { useRouter } from 'next/router'
 import { firebaseAdmin } from "../firebase/firebaseAdmin";
 import { firebase } from "../firebase/firebaseClient";
 import { useAuth } from "../firebase/auth.js";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import Layout from "../components/layout/Layout.js";
 
 import barcodeFormats from "../public/barcodeFormats.json";
+import IngredientsList from "../components/ingredientsList/IngredientsList.js";
 
 export const getServerSideProps = async (ctx) => {
     try {
@@ -39,12 +41,27 @@ export const getServerSideProps = async (ctx) => {
     }
 };
 
-function Dashboard(props) {
+function AddProduct(props) {
     const { user } = useAuth();
     const router = useRouter();
 
+    const loadIngredientsOptions = (searchInput, cb, ) =>
+        axios.post("/api/ingredients/search", { searchInput })
+            .then(res => {
+                const matchingIngredients = res.data;
+
+                const ingredientsOptions = matchingIngredients.map(ingredient => {
+                    return {
+                        value: ingredient,
+                        label: ingredient.label
+                    }
+                });
+
+                cb(ingredientsOptions);
+            })
+
     return (
-        <div>
+        <Layout>
             <p>{props.message}</p>
             <div>
                 <Form>
@@ -60,7 +77,7 @@ function Dashboard(props) {
                         <Form.Label>Barcode Format</Form.Label>
                         <Form.Control as="select">
                             { barcodeFormats.map(format => {
-                                return <option value={ format.id }>{ format.name }</option>
+                                return <option key={format.id} value={ format.id }>{ format.name }</option>
                             }) }
                         </Form.Control>
                     </Form.Group>
@@ -68,7 +85,11 @@ function Dashboard(props) {
                         <Form.Label>Barcode:</Form.Label>
                         <Form.Control type="text" placeholder="Barcode Format" />
                     </Form.Group>
-                    
+                    <Form.Group>
+                        <Form.Label>Ingredients:</Form.Label>
+                        <IngredientsList loadIngredientsOptions={loadIngredientsOptions} />
+                        <hr />
+                    </Form.Group>
                 </Form>
             </div>
             <button
@@ -83,8 +104,8 @@ function Dashboard(props) {
             >
                 Sign out
             </button>
-        </div>
+        </Layout>
     );
 }
 
-export default Dashboard;
+export default AddProduct;

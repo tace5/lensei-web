@@ -1,0 +1,11 @@
+
+.ingredients-search-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.ingredients-search {
+    flex: 1;
+    margin-right: 10px;
+}
