@@ -2,10 +2,16 @@
 .ingredients-search-container {
     display: flex;
     flex-direction: row;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .ingredients-search {
     flex: 1;
     margin-right: 10px;
+}
+
+.ingredients-list-msg {
+    color: gray;
+    margin-top: 10px;
+    margin-left: 20px;
 }

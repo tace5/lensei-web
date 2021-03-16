@@ -21,6 +21,10 @@ export default function IngredientsList({ loadIngredientsOptions }) {
         return !ingredientsList.find(ingredient => ingredient.id === option.value.id)
     }
 
+    const onIngredientRemove = ingredientId => {
+        setIngredientsList(ingredientsList.filter(ingredient => ingredient.id !== ingredientId));
+    }
+
     return (
         <div>
             <div className={styles["ingredients-search-container"]}>
@@ -40,8 +44,8 @@ export default function IngredientsList({ loadIngredientsOptions }) {
 
             <Accordion>
                 { ingredientsList.length > 0
-                    ? ingredientsList.map(ingredient => <IngredientsListItem key={ingredient.id} ingredient={ingredient} />)
-                    : "No ingredients added" }
+                    ? ingredientsList.map(ingredient => <IngredientsListItem key={ingredient.id} ingredient={ingredient} onRemove={onIngredientRemove} />)
+                    : <span className={ styles["ingredients-list-msg"] }>No ingredients</span> }
             </Accordion>
         </div>
     )
