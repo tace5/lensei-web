@@ -2,10 +2,10 @@ import { database } from "../../../firebase/db.js";
 
 export default async function productsHandler(req, res) {
     const productsRef = database.collection("products");
-    const snapshot = await productsRef.get();
+    const productsDocs = await productsRef.get();
 
     let products = [];
-    snapshot.forEach(productDoc => {
+    productsDocs.forEach(productDoc => {
         const product = {
             id: productDoc.id,
             ...productDoc.data()

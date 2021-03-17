@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import {GoogleMap, useJsApiLoader, Marker} from "@react-google-maps/api";
-import {Spinner} from "react-bootstrap";
+import React, { useState, useRef } from "react";
+import {GoogleMap, useJsApiLoader, Marker, Polyline} from "@react-google-maps/api";
+import { Spinner } from "react-bootstrap";
 
 export default function Map({ locations, setLocations }) {
+    const [center, setCenter] = useState({lat: 0, lng: 0});
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyC3_D-3T8rx1pzDbpITpZmau9H-3vR1P9w"
     })
+    const mapRef = useRef(null);
 
     const handleClick = ({ latLng }) => {
         const location = {
@@ -38,24 +40,42 @@ export default function Map({ locations, setLocations }) {
         draggableCursor: "default"
     }
 
-    return isLoaded ? <GoogleMap
+    const onCenterChanged = () => {
+        if (isLoaded && mapRef.current !== null) {
+            const newCenter = mapRef.current.state.map.getCenter();
+            setCenter(newCenter);
+        }
+    }
+
+    if (isLoaded) {
+        return (
+            <GoogleMap
+                ref={mapRef}
                 mapContainerStyle={{
                     width: '100%',
                     height: '400px'
                 }}
-                center={{
-                    lat: 0,
-                    lng: 0
-                }}
+                center={center}
                 zoom={2}
+                onCenterChanged={onCenterChanged}
                 onClick={handleClick}
                 options={options}
             >
-                { /* Child components, such as markers, info windows, etc. */ }
-                { locations.manufacturingLocation !== null
-                    ? <Marker label="Manufacturing" draggable position={locations.manufacturingLocation} /> : "" }
-                { locations.packagingLocation !== null
-                    ? <Marker label="Packaging" draggable position={locations.packagingLocation} /> : "" }
+                {locations.manufacturingLocation !== null
+                    ? <Marker label="Manufacturing" draggable position={locations.manufacturingLocation}/> : ""}
+                {locations.packagingLocation !== null
+                    ? <Marker label="Packaging" draggable position={locations.packagingLocation}/> : ""}
+                {locations.packagingLocation !== null
+                    ? <Polyline
+                        geodesic={true}
+                        path={[locations.manufacturingLocation, locations.packagingLocation]}
+                        options={{
+                            strokeColor: "#007bff"
+                        }}
+                    /> : ""}
             </GoogleMap>
-        : <Spinner animation="border" />;
+        )
+    }
+
+    return <Spinner animation="border" />
 }

@@ -2,13 +2,13 @@ import React  from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Login.module.css'
 import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
 import { useRouter } from "next/router.js";
 
-export default function Home() {
+export default function Login() {
     const { register, handleSubmit } = useForm();
     const router = useRouter();
 

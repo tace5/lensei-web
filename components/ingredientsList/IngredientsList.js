@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import AsyncSelect from 'react-select/async'
 import IngredientsListItem from "./IngredientsListItem.js";
-import { Row, Col, Accordion, Button, FormControl, InputGroup } from "react-bootstrap";
+import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from "react-bootstrap";
 
 import styles from "./IngredientsList.module.css";
 import axios from "axios";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
 
     const [selectedOption, setSelectedOption] = useState(null);
-    const [newIngredientErrors, setNewIngredientErrors] = useState({ name: "" })
+    const [newIngredientRating, setNewIngredientRating] = useState(5);
+    const [newIngredientErrors, setNewIngredientErrors] = useState({ name: null })
 
     const handleSelect = ingredientOption => {
         updateIngredientsList([
@@ -66,7 +67,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                 <div className={ styles["new-ingredient-container"] }>
                     <Accordion.Collapse eventKey="new-ingredient">
                         <div className={ styles["new-ingredient-form"] }>
-                            <Row className="m-3">
+                            <Row className="m-3 mb-4">
                                 <Col>
                                     <InputGroup>
                                         <InputGroup.Prepend>
@@ -74,7 +75,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                         </InputGroup.Prepend>
                                         <FormControl
                                             ref={ register }
-                                            name="name"
+                                            name="ingredientName"
                                             placeholder="Ingredient Name"
                                             isInvalid={ !!newIngredientErrors.name }
                                         />
@@ -85,16 +86,17 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                 </Col>
                                 <Col>
                                     <InputGroup>
-                                        <InputGroup.Prepend>
-                                            <InputGroup.Text>Rating:</InputGroup.Text>
-                                        </InputGroup.Prepend>
+                                        <FormLabel>Rating: <b>{ newIngredientRating }</b></FormLabel>
                                         <FormControl
-                                            as="select"
-                                            ref={ register }
                                             name="rating"
-                                        >
-                                            { [...Array(11).keys()].map(nr => <option key={ "rating-" + nr }>{ nr }</option>) }
-                                        </FormControl>
+                                            ref={ register }
+                                            type="range"
+                                            value={ newIngredientRating }
+                                            min={1}
+                                            max={10}
+                                            step={1}
+                                            onChange={ e => setNewIngredientRating(parseInt(e.target.value)) }
+                                        />
                                     </InputGroup>
                                 </Col>
                             </Row>

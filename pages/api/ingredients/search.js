@@ -4,7 +4,7 @@ export default async function handleIngredientsSearch(req, res) {
     const { searchInput } = req.body;
 
     const ingredientsRef = database.collection("ingredients");
-    const snapshot =
+    const matchingDocs =
         await ingredientsRef
             .orderBy("name")
             .startAt(searchInput)
@@ -12,7 +12,7 @@ export default async function handleIngredientsSearch(req, res) {
             .get()
 
     let matchingIngredients = [];
-    snapshot.forEach(ingredientDoc => {
+    matchingDocs.forEach(ingredientDoc => {
         const ingredient = {
             id: ingredientDoc.id,
             ...ingredientDoc.data()

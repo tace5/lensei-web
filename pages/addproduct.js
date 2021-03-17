@@ -6,13 +6,12 @@ import { firebaseAdmin } from "../firebase/firebaseAdmin";
 import { firebase } from "../firebase/firebaseClient";
 import { useAuth } from "../firebase/auth.js";
 import axios from "axios";
-import { Row, Col, Form, InputGroup, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
+import { Row, Col, Button, Form, InputGroup, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
 import Layout from "../components/layout/Layout.js";
 import IngredientsList from "../components/ingredientsList/IngredientsList.js";
 import Map from "../components/map/Map.js";
 
 import barcodeFormats from "../public/barcodeFormats.json";
-import styles from "../styles/Addproduct.module.css";
 
 export const getServerSideProps = async (ctx) => {
     try {
@@ -49,13 +48,16 @@ function AddProduct(props) {
     const [ratings, setRatings] = useState({
         ingredientsRating: 5,
         packagingRating: 5,
-        companyRating: 5
+        companyRating: 5,
+        overallRating: 5
     });
     const [locations, setLocations] = useState({
         manufacturingLocation: null,
         packagingLocation: null
     })
-    const [transportWeight, setTransportWeight] = useState(5)
+    const [transportWeight, setTransportWeight] = useState(5);
+    const [newProductErrors, setNewProductErrors] = useState({ name: null });
+
     const { register, handleSubmit } = useForm();
     const { user } = useAuth();
     const router = useRouter();
@@ -75,55 +77,63 @@ function AddProduct(props) {
                 cb(ingredientsOptions);
             })
 
-    const onIngredientsListUpdate = ingredientsList => {
-        setIngredientsList(ingredientsList);
-        const ratingSum = ingredientsList.reduce(((sum, ingredient) => sum + parseInt(ingredient.rating)), 0);
-
-        if (ratingSum === 0 && ingredientsList.length === 0) {
-            setRatings({
-                ...ratings,
-                ingredientsRating: 5
-            });
-        } else {
-            setRatings({
-                ...ratings,
-                ingredientsRating: Math.round(ratingSum / ingredientsList.length)
-            });
-        }
-    }
-
-    const onTransportWeightChange = e => {
-        setTransportWeight(e.target.value);
+    const onProductSubmit = ({ name, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+        axios.post("/api/products/new", {
+            name,
+            barcodeFormat,
+            barcode,
+            ingredientsList,
+            manufacturingLocation: locations.manufacturingLocation,
+            packagingLocation: locations.packagingLocation,
+            transportWeight,
+            companyRating,
+            packagingRating,
+            overallRating
+        })
+            .then(res => {
+                // TODO
+            })
+            .catch(errors => {
+                setNewProductErrors(errors.response.data);
+            })
     }
 
     return (
         <Layout>
             <p>{props.message}</p>
             <div>
-                <Form>
+                <Form onSubmit={handleSubmit(onProductSubmit)}>
                     <Form.Group controlId="productName">
                         <Form.Label>Product Name:</Form.Label>
-                        <Form.Control type="text" placeholder="Product Name" />
+                        <Form.Control
+                            type="text"
+                            placeholder="Product Name"
+                            ref={ register }
+                            name="name"
+                        />
+                        <FormControl.Feedback type="invalid">
+                            { newProductErrors.name }
+                        </FormControl.Feedback>
                     </Form.Group>
                     <Form.Label>Barcode:</Form.Label>
                     <InputGroup className="mb-xl-3">
-                        <DropdownButton
-                            as={InputGroup.Prepend}
-                            variant="outline-secondary"
-                            title="Format"
+                        <Form.Control
+                            as="select"
+                            ref={ register }
+                            name="barcodeFormat"
+                            defaultValue=""
                         >
-                            { barcodeFormats.map(format => {
-                                return <Dropdown.Item key={format.id} value={ format.id }>{ format.name }</Dropdown.Item>
-                            }) }
-                        </DropdownButton>
+                            <option value="" disabled hidden>Format</option>
+                            { barcodeFormats.map(format => <option key={ format.id } value={ format.id }>{ format.name }</option>) }
+                        </Form.Control>
 
-                        <Form.Control aria-describedby="basic-addon1" placeholder="Barcode" />
+                        <Form.Control ref={ register } name="barcode"  aria-describedby="basic-addon1" placeholder="Barcode" />
                     </InputGroup>
                     <Form.Group controlId="ingredientsList">
                         <Form.Label>Ingredients:</Form.Label>
                         <IngredientsList
                             loadIngredientsOptions={loadIngredientsOptions}
-                            updateIngredientsList={onIngredientsListUpdate}
+                            updateIngredientsList={setIngredientsList}
                             ingredientsList={ingredientsList}
                         />
                         <hr />
@@ -136,49 +146,71 @@ function AddProduct(props) {
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group controlId="transportWeight">
-                                <Form.Label>Transport Weight: <b>{transportWeight}</b></Form.Label>
-                                <Form.Control value={transportWeight} type="range" min={1} max={10} step={0.1} onChange={onTransportWeightChange} />
+                            <Form.Group className="mb-5" controlId="transportWeight">
+                                <Form.Label>Transport Weight: <b>{ transportWeight }</b></Form.Label>
+                                <Form.Control
+                                    name="transportWeight"
+                                    value={ transportWeight }
+                                    ref={ register }
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    step={0.1}
+                                    onChange={e => setTransportWeight(parseFloat(e.target.value))}
+                                />
                             </Form.Group>
                             <h3 className="mb-3">Ratings:</h3>
                             <Form.Group controlId="companyRating">
-                                <Form.Label>Company Rating:</Form.Label>
+                                <Form.Label>Company Rating: <b>{ ratings.companyRating }</b></Form.Label>
                                 <FormControl
-                                    as="select"
+                                    name="companyRating"
+                                    value={ ratings.companyRating }
                                     ref={ register }
-                                    name="company-rating"
-                                    value={ratings.companyRating}
-                                    onChange={ e => setRatings({ ...ratings, companyRating: parseInt(e.target.value) }) }
-                                >
-                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                                </FormControl>
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    onChange={ e => setRatings({
+                                        ...ratings,
+                                        companyRating: e.target.value
+                                    }) }
+                                />
                             </Form.Group>
                             <Form.Group controlId="packagingRating">
-                                <Form.Label>Packaging Rating:</Form.Label>
+                                <Form.Label>Packaging Rating: <b>{ ratings.packagingRating }</b></Form.Label>
                                 <FormControl
-                                    as="select"
-                                    ref={ register }
-                                    name="company-rating"
+                                    name="packagingRating"
                                     value={ratings.packagingRating}
-                                    onChange={ e => setRatings({ ...ratings, packagingRating: parseInt(e.target.value) }) }
-                                >
-                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                                </FormControl>
+                                    ref={ register }
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    onChange={ e => setRatings({
+                                        ...ratings,
+                                        packagingRating: e.target.value
+                                    }) }
+                                />
                             </Form.Group>
                             <Form.Group controlId="overallRating">
-                                <Form.Label>Overall Rating:</Form.Label>
+                                <Form.Label>Overall Rating: <b>{ ratings.overallRating }</b></Form.Label>
                                 <FormControl
-                                    as="select"
+                                    name="overallRating"
+                                    value={ratings.overallRating}
                                     ref={ register }
-                                    name="transport-rating"
-                                    value={ratings.transportRating}
-                                    onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
-                                >
-                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                                </FormControl>
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    onChange={ e => setRatings({
+                                        ...ratings,
+                                        overallRating: e.target.value
+                                    }) }
+                                />
                             </Form.Group>
                         </Col>
                     </Row>
+                    <div className="mt-4 d-flex justify-content-center"><Button size="lg">Add Product</Button></div>
                 </Form>
             </div>
             <button

@@ -1,18 +1,18 @@
 import { database } from "../../../firebase/db";
 
 export default async function handleNewIngredient(req, res) {
-    const { name, rating, description } = req.body;
+    const { ingredientName, rating, description } = req.body;
     const newIngredient = {
-        name: name.toLowerCase(),
+        name: ingredientName.toLowerCase(),
         label: name,
         rating,
         description
     }
 
     const ingredientsRef = database.collection("ingredients");
-    const existingIngredientSnapshot = await ingredientsRef.where("name", "==", newIngredient.name).get();
+    const existingIngredientDoc = await ingredientsRef.where("name", "==", newIngredient.name).get();
 
-    if (existingIngredientSnapshot.empty) {
+    if (existingIngredientDoc.empty) {
         const newIngredientRef = await ingredientsRef.add(newIngredient)
 
         res.status(200).json({
