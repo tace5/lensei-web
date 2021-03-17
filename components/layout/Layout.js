@@ -20,7 +20,7 @@ export default function Layout({ title, children, breadcrumbs }) {
                 { breadcrumbs
                     ? <Breadcrumb className="mb-4">
                         { breadcrumbs.map((crumb, idx) => {
-                            return <BreadcrumbItem href={ crumb.href }>{ crumb.name }</BreadcrumbItem>
+                            return <BreadcrumbItem key={crumb.name} href={ crumb.href }>{ crumb.name }</BreadcrumbItem>
                         }) }
                     </Breadcrumb> : ""}
                 <div>
