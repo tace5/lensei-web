@@ -14,17 +14,15 @@ export default function IngredientsListItem({ ingredient, onRemove }) {
 
     return (
         <Card>
-            <AccordionToggle className={ styles["toggle-ingredient-btn"] } eventKey={ ingredient.id }>
-                <Card.Header className={ styles["ingredients-list-item-header"] }>
-                    <div className={styles["ingredients-list-item-data"]}>
-                        <b>{ ingredient.label }</b>
-                        <div className={styles["ingredients-list-item-info"]}>
-                            <span className="mr-5">Rating: <b>{ ingredient.rating }</b></span>
-                            <Button onClick={handleRemoveClick} size="sm" variant="danger">Remove</Button>
-                        </div>
+            <AccordionToggle as={Card.Header} className={ styles["ingredients-list-item-header"] } eventKey={ ingredient.id }>
+                <div className={styles["ingredients-list-item-data"]}>
+                    <b>{ ingredient.label }</b>
+                    <div className={styles["ingredients-list-item-info"]}>
+                        <span className="mr-5">Rating: <b>{ ingredient.rating }</b></span>
+                        <Button onClick={handleRemoveClick} size="sm" variant="danger">Remove</Button>
                     </div>
-                    <FontAwesomeIcon icon={ faAngleDown } />
-                </Card.Header>
+                </div>
+                <FontAwesomeIcon icon={ faAngleDown } />
             </AccordionToggle>
             <AccordionCollapse eventKey={ ingredient.id }>
                 <Card.Body>{ ingredient.description }</Card.Body>

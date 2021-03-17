@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css'
 import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
-import {useRouter} from "next/router.js";
+import { useRouter } from "next/router.js";
 
 export default function Home() {
     const { register, handleSubmit } = useForm();

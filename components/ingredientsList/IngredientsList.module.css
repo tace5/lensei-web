@@ -1,8 +1,21 @@
 
+.new-ingredient-container {
+    margin-bottom: 15px;
+}
+
+.new-ingredient-form {
+    padding: 5px;
+    margin-top: 20px;
+}
+
+.new-ingredient-form-btn-container {
+    display: flex;
+    justify-content: center;
+}
+
 .ingredients-search-container {
     display: flex;
     flex-direction: row;
-    margin-bottom: 15px;
 }
 
 .ingredients-search {
