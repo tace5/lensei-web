@@ -49,13 +49,13 @@ function AddProduct(props) {
     const [ratings, setRatings] = useState({
         ingredientsRating: 5,
         packagingRating: 5,
-        companyRating: 5,
-        transportRating: 5
+        companyRating: 5
     });
     const [locations, setLocations] = useState({
         manufacturingLocation: null,
         packagingLocation: null
     })
+    const [transportWeight, setTransportWeight] = useState(5)
     const { register, handleSubmit } = useForm();
     const { user } = useAuth();
     const router = useRouter();
@@ -92,6 +92,10 @@ function AddProduct(props) {
         }
     }
 
+    const onTransportWeightChange = e => {
+        setTransportWeight(e.target.value);
+    }
+
     return (
         <Layout>
             <p>{props.message}</p>
@@ -115,7 +119,7 @@ function AddProduct(props) {
 
                         <Form.Control aria-describedby="basic-addon1" placeholder="Barcode" />
                     </InputGroup>
-                    <Form.Group>
+                    <Form.Group controlId="ingredientsList">
                         <Form.Label>Ingredients:</Form.Label>
                         <IngredientsList
                             loadIngredientsOptions={loadIngredientsOptions}
@@ -126,26 +130,18 @@ function AddProduct(props) {
                     </Form.Group>
                     <Row>
                         <Col>
-                            <Form.Group>
-                                <Form.Label>Manufacturing & Packaging Location</Form.Label>
+                            <Form.Group controlId="manufacAndPackagingLoc">
+                                <Form.Label>Manufacturing & Packaging Locations:</Form.Label>
                                 <Map locations={locations} setLocations={setLocations} />
                             </Form.Group>
                         </Col>
                         <Col>
-                            <h3 className="mb-3">Ratings:</h3>
-                            <Form.Group>
-                                <Form.Label>Transport Rating:</Form.Label>
-                                <FormControl
-                                    as="select"
-                                    ref={ register }
-                                    name="transport-rating"
-                                    value={ratings.transportRating}
-                                    onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
-                                >
-                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                                </FormControl>
+                            <Form.Group controlId="transportWeight">
+                                <Form.Label>Transport Weight: <b>{transportWeight}</b></Form.Label>
+                                <Form.Control value={transportWeight} type="range" min={1} max={10} step={0.1} onChange={onTransportWeightChange} />
                             </Form.Group>
-                            <Form.Group>
+                            <h3 className="mb-3">Ratings:</h3>
+                            <Form.Group controlId="companyRating">
                                 <Form.Label>Company Rating:</Form.Label>
                                 <FormControl
                                     as="select"
@@ -157,7 +153,7 @@ function AddProduct(props) {
                                     { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
                                 </FormControl>
                             </Form.Group>
-                            <Form.Group>
+                            <Form.Group controlId="packagingRating">
                                 <Form.Label>Packaging Rating:</Form.Label>
                                 <FormControl
                                     as="select"
@@ -169,7 +165,7 @@ function AddProduct(props) {
                                     { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
                                 </FormControl>
                             </Form.Group>
-                            <Form.Group>
+                            <Form.Group controlId="overallRating">
                                 <Form.Label>Overall Rating:</Form.Label>
                                 <FormControl
                                     as="select"

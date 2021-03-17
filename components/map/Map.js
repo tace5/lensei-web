@@ -30,11 +30,12 @@ export default function Map({ locations, setLocations }) {
         return <div>Map cannot be loaded right now, sorry.</div>
     }
 
-    const controls = {
+    const options = {
         mapTypeControl: false,
         streetViewControl: false,
         rotateControl: false,
-        fullscreenControl: false
+        fullscreenControl: false,
+        draggableCursor: "default"
     }
 
     return isLoaded ? <GoogleMap
@@ -48,7 +49,7 @@ export default function Map({ locations, setLocations }) {
                 }}
                 zoom={2}
                 onClick={handleClick}
-                options={controls}
+                options={options}
             >
                 { /* Child components, such as markers, info windows, etc. */ }
                 { locations.manufacturingLocation !== null
