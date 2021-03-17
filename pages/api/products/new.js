@@ -1,4 +1,5 @@
 import { database } from "../../../firebase/db";
+import * as firebaseAdmin from "firebase-admin";
 
 function calculateIngredientsRating(ingredientsList) {
     const ratingSum = ingredientsList.reduce(((sum, ingredient) => sum + parseInt(ingredient.rating)), 0);
@@ -10,9 +11,25 @@ function calculateIngredientsRating(ingredientsList) {
     }
 }
 
+function rad(x) {
+    return x * Math.PI / 180;
+}
+
+export function getDistance(p1, p2) {
+    const R = 6378137;
+    const dLat = rad(p2.lat - p1.lat);
+    const dLong = rad(p2.lng - p1.lng);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (R * c) / 1000;
+};
+
 export default async function handleNewProduct(req, res) {
     const {
         name,
+        price,
         barcodeFormat,
         barcode,
         ingredientsList,
@@ -31,20 +48,25 @@ export default async function handleNewProduct(req, res) {
         const newProductId = barcodeFormat + "-" + barcode;
         const newProductRef = productsRef.doc(newProductId);
 
-        await productsRef.set({
+        await newProductRef.set({
             name: name.toLowerCase(),
+            price,
+            likes: 0,
+            dislikes: 0,
             label: name,
             format: barcodeFormat,
             code: barcode,
-            manufacturingLoc: new GeoPoint(manufacturingLocation.lat, manufacturingLocation.lng),
-            packagingLocation: new GeoPoint(packagingLocation.lat, packagingLocation.lng),
-
+            manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLocation.lat, manufacturingLocation.lng),
+            packagingLocation: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
+            transportDistance: getDistance(manufacturingLocation, packagingLocation),
             transportWeight,
             ingredientsRating: calculateIngredientsRating(ingredientsList),
             companyRating,
             packagingRating,
             overallRating
         })
+
+        res.status(200);
     } else {
         const errors = { name: "A product with that name already exists" }
         res.status(409).json(errors);

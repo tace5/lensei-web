@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import {GoogleMap, useJsApiLoader, Marker, Polyline} from "@react-google-maps/api";
-import { Spinner } from "react-bootstrap";
+import React, {useRef, useState} from "react";
+import {GoogleMap, Marker, Polyline, useJsApiLoader} from "@react-google-maps/api";
+import {Spinner} from "react-bootstrap";
 
 export default function Map({ locations, setLocations }) {
     const [center, setCenter] = useState({lat: 0, lng: 0});
@@ -72,6 +72,7 @@ export default function Map({ locations, setLocations }) {
                         options={{
                             strokeColor: "#007bff"
                         }}
+
                     /> : ""}
             </GoogleMap>
         )

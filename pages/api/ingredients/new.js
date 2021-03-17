@@ -4,7 +4,7 @@ export default async function handleNewIngredient(req, res) {
     const { ingredientName, rating, description } = req.body;
     const newIngredient = {
         name: ingredientName.toLowerCase(),
-        label: name,
+        label: ingredientName,
         rating,
         description
     }

@@ -30,8 +30,8 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
         updateIngredientsList(ingredientsList.filter(ingredient => ingredient.id !== ingredientId));
     }
 
-    const handleSubmitIngredient = ({ name, rating, description }) => {
-        axios.post("/api/ingredients/new", { name, rating, description })
+    const handleSubmitIngredient = ({ ingredientName, rating, description }) => {
+        axios.post("/api/ingredients/new", { ingredientName, rating, description })
             .then(res => {
                 const newIngredient = res.data;
 
@@ -40,7 +40,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                     newIngredient
                 ])
 
-                reset({ name: "", rating: 5, description: ""});
+                reset({ ingredientName: "", rating: 5, description: ""});
             })
             .catch(error => {
                 setNewIngredientErrors(error.response.data);

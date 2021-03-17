@@ -59,7 +59,6 @@ function AddProduct(props) {
     const [newProductErrors, setNewProductErrors] = useState({ name: null });
 
     const { register, handleSubmit } = useForm();
-    const { user } = useAuth();
     const router = useRouter();
 
     const loadIngredientsOptions = (searchInput, cb) =>
@@ -77,21 +76,22 @@ function AddProduct(props) {
                 cb(ingredientsOptions);
             })
 
-    const onProductSubmit = ({ name, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+    const onProductSubmit = ({ name, price, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
         axios.post("/api/products/new", {
             name,
+            price: parseFloat(price),
             barcodeFormat,
             barcode,
             ingredientsList,
             manufacturingLocation: locations.manufacturingLocation,
             packagingLocation: locations.packagingLocation,
-            transportWeight,
-            companyRating,
-            packagingRating,
-            overallRating
+            transportWeight: parseFloat(transportWeight),
+            companyRating: parseInt(companyRating),
+            packagingRating: parseInt(packagingRating),
+            overallRating: parseInt(overallRating)
         })
             .then(res => {
-                // TODO
+
             })
             .catch(errors => {
                 setNewProductErrors(errors.response.data);
@@ -100,21 +100,37 @@ function AddProduct(props) {
 
     return (
         <Layout>
-            <p>{props.message}</p>
             <div>
+                <h2 className="mb-5">New Product</h2>
                 <Form onSubmit={handleSubmit(onProductSubmit)}>
-                    <Form.Group controlId="productName">
-                        <Form.Label>Product Name:</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Product Name"
-                            ref={ register }
-                            name="name"
-                        />
-                        <FormControl.Feedback type="invalid">
-                            { newProductErrors.name }
-                        </FormControl.Feedback>
-                    </Form.Group>
+                    <Row>
+                        <Col>
+                            <Form.Group controlId="productName">
+                                <Form.Label>Name:</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Product Name"
+                                    ref={ register }
+                                    name="name"
+                                />
+                                <FormControl.Feedback type="invalid">
+                                    { newProductErrors.name }
+                                </FormControl.Feedback>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group controlId="price">
+                                <Form.Label>Price:</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    step={0.01}
+                                    placeholder="Product Price"
+                                    ref={ register }
+                                    name="price"
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
                     <Form.Label>Barcode:</Form.Label>
                     <InputGroup className="mb-xl-3">
                         <Form.Control
@@ -210,21 +226,9 @@ function AddProduct(props) {
                             </Form.Group>
                         </Col>
                     </Row>
-                    <div className="mt-4 d-flex justify-content-center"><Button size="lg">Add Product</Button></div>
+                    <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">Add Product</Button></div>
                 </Form>
             </div>
-            <button
-                onClick={async () => {
-                    await firebase
-                        .auth()
-                        .signOut()
-                        .then(() => {
-                            router.push("/");
-                        });
-                }}
-            >
-                Sign out
-            </button>
         </Layout>
     );
 }
