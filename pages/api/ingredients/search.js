@@ -9,6 +9,7 @@ export default async function handleIngredientsSearch(req, res) {
             .orderBy("name")
             .startAt(searchInput)
             .endAt(searchInput + "\uf8ff")
+            .limit(20)
             .get()
 
     let matchingIngredients = [];

@@ -45,6 +45,8 @@ export default function Login() {
                 <title>Snapshop - Admin Login</title>
             </Head>
 
+            <h2 className="mb-4">Login</h2>
+
             <Form onSubmit={handleSubmit(handleLogin)}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>

@@ -6,14 +6,14 @@ import axios from "axios";
 import Layout from "../components/layout/Layout.js";
 
 import ProductForm from "../components/productForm/ProductForm.js";
+import { useAuth } from "../firebase/auth.js";
 
 export const getServerSideProps = async (ctx) => {
     try {
         const cookies = nookies.get(ctx);
         const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
-        const { uid, email, admin } = token;
 
-        if (!admin) {
+        if (!token.admin) {
             return {
                 redirect: {
                     permanent: false,
@@ -23,9 +23,7 @@ export const getServerSideProps = async (ctx) => {
             };
         }
 
-        return {
-            props: { message: `Your email is ${email} and your UID is ${uid}.` },
-        };
+        return { props: {} };
     } catch (err) {
         return {
             redirect: {
@@ -38,6 +36,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 function AddProduct() {
+    const { user } = useAuth();
     const [newProductErrors, setNewProductErrors] = useState({ name: null });
 
     const router = useRouter();
@@ -58,7 +57,7 @@ function AddProduct() {
         })
             .then(res => {
                 if (res.status === 200) {
-                    // TODO
+                    router.push("/products");
                 }
             })
             .catch(errors => {
@@ -78,7 +77,7 @@ function AddProduct() {
     ]
 
     return (
-        <Layout title="New Product" breadcrumbs={breadCrumbs}>
+        <Layout title="New Product" breadcrumbs={breadCrumbs} user={user}>
             <div>
                 <ProductForm
                     onSubmit={onProductSubmit}
