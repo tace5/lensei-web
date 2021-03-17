@@ -1,16 +1,18 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import nookies from "nookies";
 import { useRouter } from 'next/router'
 import { firebaseAdmin } from "../firebase/firebaseAdmin";
 import { firebase } from "../firebase/firebaseClient";
 import { useAuth } from "../firebase/auth.js";
 import axios from "axios";
-import {Row, Col, Form, InputGroup, DropdownButton, Dropdown, FormControl} from "react-bootstrap";
+import { Row, Col, Form, InputGroup, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
 import Layout from "../components/layout/Layout.js";
+import IngredientsList from "../components/ingredientsList/IngredientsList.js";
+import Map from "../components/map/Map.js";
 
 import barcodeFormats from "../public/barcodeFormats.json";
-import IngredientsList from "../components/ingredientsList/IngredientsList.js";
-import {useForm} from "react-hook-form";
+import styles from "../styles/Addproduct.module.css";
 
 export const getServerSideProps = async (ctx) => {
     try {
@@ -50,6 +52,10 @@ function AddProduct(props) {
         companyRating: 5,
         transportRating: 5
     });
+    const [locations, setLocations] = useState({
+        manufacturingLocation: null,
+        packagingLocation: null
+    })
     const { register, handleSubmit } = useForm();
     const { user } = useAuth();
     const router = useRouter();
@@ -121,6 +127,25 @@ function AddProduct(props) {
                     <Row>
                         <Col>
                             <Form.Group>
+                                <Form.Label>Manufacturing & Packaging Location</Form.Label>
+                                <Map locations={locations} setLocations={setLocations} />
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <h3 className="mb-3">Ratings:</h3>
+                            <Form.Group>
+                                <Form.Label>Transport Rating:</Form.Label>
+                                <FormControl
+                                    as="select"
+                                    ref={ register }
+                                    name="transport-rating"
+                                    value={ratings.transportRating}
+                                    onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
+                                >
+                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
+                                </FormControl>
+                            </Form.Group>
+                            <Form.Group>
                                 <Form.Label>Company Rating:</Form.Label>
                                 <FormControl
                                     as="select"
@@ -132,8 +157,6 @@ function AddProduct(props) {
                                     { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
                                 </FormControl>
                             </Form.Group>
-                        </Col>
-                        <Col>
                             <Form.Group>
                                 <Form.Label>Packaging Rating:</Form.Label>
                                 <FormControl
@@ -146,32 +169,20 @@ function AddProduct(props) {
                                     { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
                                 </FormControl>
                             </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Overall Rating:</Form.Label>
+                                <FormControl
+                                    as="select"
+                                    ref={ register }
+                                    name="transport-rating"
+                                    value={ratings.transportRating}
+                                    onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
+                                >
+                                    { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
+                                </FormControl>
+                            </Form.Group>
                         </Col>
                     </Row>
-                    <Form.Group>
-                        <Form.Label>Transport Rating:</Form.Label>
-                        <FormControl
-                            as="select"
-                            ref={ register }
-                            name="transport-rating"
-                            value={ratings.transportRating}
-                            onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
-                        >
-                            { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                        </FormControl>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Overall Rating:</Form.Label>
-                        <FormControl
-                            as="select"
-                            ref={ register }
-                            name="transport-rating"
-                            value={ratings.transportRating}
-                            onChange={ e => setRatings({ ...ratings, transportRating: parseInt(e.target.value) }) }
-                        >
-                            { [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(nr => <option value={nr} key={ "rating-" + nr }>{ nr }</option>) }
-                        </FormControl>
-                    </Form.Group>
                 </Form>
             </div>
             <button

@@ -39,7 +39,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                     newIngredient
                 ])
 
-                reset({ name: "", rating: 1, description: ""});
+                reset({ name: "", rating: 5, description: ""});
             })
             .catch(error => {
                 setNewIngredientErrors(error.response.data);
