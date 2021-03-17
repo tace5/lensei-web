@@ -91,17 +91,29 @@ function AddProduct(props) {
             overallRating: parseInt(overallRating)
         })
             .then(res => {
-
+                if (res.status === 200) {
+                    // TODO
+                }
             })
             .catch(errors => {
                 setNewProductErrors(errors.response.data);
             })
     }
 
+    const breadCrumbs = [
+        {
+            href: "/products",
+            name: "Products"
+        },
+        {
+            href: "/addproduct",
+            name: "New Product"
+        }
+    ]
+
     return (
-        <Layout>
+        <Layout title="New Product" breadcrumbs={breadCrumbs}>
             <div>
-                <h2 className="mb-5">New Product</h2>
                 <Form onSubmit={handleSubmit(onProductSubmit)}>
                     <Row>
                         <Col>
