@@ -38,7 +38,7 @@ export default function Navigation({ user }) {
                         <NavDropdown.Item href="/products">All Products</NavDropdown.Item>
                         <NavDropdown.Item href="/products/new">New Product</NavDropdown.Item>
                     </NavDropdown>
-                    <Nav.Link href="#suggestions">Suggestions</Nav.Link>
+                    <Nav.Link href="/suggestions">Suggestions</Nav.Link>
                     <Form onSubmit={ handleSubmit(handleProductSearch) } className="ml-sm-2" inline>
                         <FormControl name="searchInput" ref={ register } type="text" placeholder="Search Products" className="mr-sm-2" />
                         <Button type="submit" variant="outline-success">Search</Button>

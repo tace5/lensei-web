@@ -109,9 +109,7 @@ export default function ProductsList({ user, products, initialSearchInput }) {
                         product={product}
                         onView={onProductView}
                         onDelete={onProductDelete}
-                    >
-                        { product.name }
-                    </ProductListItem>)
+                    />)
                 }
             </InfiniteScroll>
         </Layout>

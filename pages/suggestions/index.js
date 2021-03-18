@@ -1,0 +1,73 @@
+import React, {useState} from "react";
+import Layout from "../../components/layout/Layout.js";
+import {Spinner} from "react-bootstrap";
+import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
+import SuggestionsListItem from "../../components/suggestionsListItem/SuggestionsListItem.js";
+import nookies from "nookies";
+import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
+import { getNextSuggestionsPage } from "../api/suggestions";
+
+export const getServerSideProps = async (ctx) => {
+    const cookies = nookies.get(ctx);
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token).catch(() => null);
+
+    if (token === null || !token.admin) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: "/",
+            },
+            props: {},
+        };
+    }
+
+    const suggestions = await getNextSuggestionsPage(10, null);
+    return { props: { user: { email: token.email }, suggestions } }
+}
+
+export default function SuggestionsList({ user, suggestions }) {
+    const [allSuggestions, setAllSuggestions] = useState(suggestions);
+    const [hasMoreSuggestions, setHasMoreSuggestions] = useState(suggestions.length !== 0);
+
+    const loadSuggestions = () => {
+        const lastSuggestion = allSuggestions[allSuggestions.length - 1];
+
+        axios.post("/api/suggestions", { suggestionsPerPage: 10, lastDocId: lastSuggestion.id, orderBy: "dateCreated" })
+            .then(res => {
+                const nextSuggestions = res.data;
+
+                if (nextSuggestions.length === 0) {
+                    setHasMoreSuggestions(false);
+                } else {
+                    setAllSuggestions(allSuggestions.concat(nextSuggestions));
+                }
+            })
+    }
+
+    const breadCrumbs = [
+        {
+            href: "/suggestions",
+            name: "Suggestions"
+        }
+    ]
+
+    return (
+        <Layout title="Product Suggestions" user={user} breadcrumbs={breadCrumbs}>
+            <InfiniteScroll
+                dataLength={allSuggestions.length}
+                next={loadSuggestions}
+                hasMore={hasMoreSuggestions}
+                loader={<Spinner animation="border" />}
+            >
+                { allSuggestions.length === 0 ? <span>No suggestions in the database</span> : "" }
+                { allSuggestions.map(suggestion =>
+                    <SuggestionsListItem
+                        key={suggestion.code}
+                        suggestion={suggestion}
+                    />)
+                }
+            </InfiniteScroll>
+        </Layout>
+    )
+}

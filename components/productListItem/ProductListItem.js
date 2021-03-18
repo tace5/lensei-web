@@ -15,6 +15,8 @@ export default function ProductListItem({ product, onDelete, onView }) {
         onDelete(product.id);
     }
 
+    const daysSinceCreation = new Date().getDate() - new Date(product.dateCreated).getDate();
+
     return (
         <Accordion>
             <AccordionToggle as={Card.Header} className={ styles["product-list-item-header"] } eventKey={ product.id }>
@@ -38,7 +40,9 @@ export default function ProductListItem({ product, onDelete, onView }) {
                     <Row>
                         <Col className="text-center">Price: <b>£{ product.price }</b></Col>
                         <Col className="text-center"><span className="mr-2">Likes: <b>{product.likes}</b></span> Dislikes: <b>{product.dislikes}</b></Col>
-                        <Col className="text-center">Added <b>{ new Date().getDate() - new Date(product.dateCreated).getDate() }</b> Days Ago</Col>
+                        <Col className="text-center">
+                            Added { daysSinceCreation === 0 ? "Today" : (<b>daysSinceCreation</b> + " Days Ago") } Days Ago
+                        </Col>
                     </Row>
                 </Card.Body>
             </AccordionCollapse>
