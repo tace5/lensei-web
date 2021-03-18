@@ -1,25 +1,30 @@
 import { database } from "../../../firebase/db.js";
 
-export async function getNextProductPage(productsPerPage, startAt, orderBy) {
+export async function getNextProductPage(productsPerPage, lastDocId, orderBy) {
     const productsRef = database.collection("products");
 
-    const productsDocs = await productsRef.orderBy(orderBy).startAt(startAt).limit(productsPerPage).get();
+    let productDocs;
+    if (lastDocId === null) {
+        productDocs = await productsRef.orderBy("name").orderBy(orderBy).limit(productsPerPage).get()
+    } else {
+        const lastDoc = await productsRef.doc(lastDocId).get();
+        productDocs = await productsRef.orderBy("name").orderBy(orderBy).startAfter(lastDoc).limit(productsPerPage).get();
+    }
 
     let products = [];
-    productsDocs.forEach(productDoc => {
-        const data = productDoc.data();
+    productDocs.forEach(productDoc => {
+        const { label, name, companyRating, packagingRating, overallRating, price, likes, dislikes, dateCreated } = productDoc.data();
         const product = {
-            ...data,
             id: productDoc.id,
-            manufacturingLoc: {
-                lat: data.manufacturingLoc.latitude,
-                lng: data.manufacturingLoc.longitude
-            },
-            packagingLoc: {
-                lat: data.packagingLoc.latitude,
-                lng: data.packagingLoc.longitude
-            },
-            dateCreated: data.dateCreated.toString()
+            name,
+            label,
+            companyRating,
+            packagingRating,
+            overallRating,
+            price,
+            likes,
+            dislikes,
+            dateCreated: dateCreated.toString()
         }
 
         products.push(product);
@@ -29,9 +34,8 @@ export async function getNextProductPage(productsPerPage, startAt, orderBy) {
 }
 
 export default async function handleProducts(req, res) {
-    const { productsPerPage, startAt, orderBy } = req.body;
-
-    const nextProductPage = await getNextProductPage(productsPerPage, startAt, orderBy);
+    const { productsPerPage, lastDocId, orderBy } = req.body;
+    const nextProductPage = await getNextProductPage(productsPerPage, lastDocId, orderBy);
 
     res.status(200).json(nextProductPage);
 }

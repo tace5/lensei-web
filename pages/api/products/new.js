@@ -44,6 +44,8 @@ export default async function handleNewProduct(req, res) {
     const productsRef = database.collection("products");
     const productExistsSnapShot = await productsRef.where("name", "==", name.toLowerCase()).get();
 
+    const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
+
     if (productExistsSnapShot.empty) {
         const newProductId = barcodeFormat + "-" + barcode;
         const newProductRef = productsRef.doc(newProductId);
@@ -60,6 +62,7 @@ export default async function handleNewProduct(req, res) {
             packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
             manufacturingDistance: Math.round(getDistance(manufacturingLocation, packagingLocation) * 100) / 100,
             transportWeight,
+            ingredients: ingredientsIds,
             ingredientsRating: calculateIngredientsRating(ingredientsList),
             companyRating,
             packagingRating,
