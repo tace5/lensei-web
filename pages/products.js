@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { InputGroup, FormControl, Spinner } from "react-bootstrap";
 import { getNextProductPage } from "./api/products";
 import Layout from "../components/layout/Layout.js";
-import {useRouter} from "next/router.js";
+import { useRouter } from "next/router.js";
 import ProductListItem from "../components/productListItem/ProductListItem.js";
 
 export const getServerSideProps = async (ctx) => {
@@ -24,15 +24,20 @@ export const getServerSideProps = async (ctx) => {
         };
     }
 
-    const products = await getNextProductPage(10, null, "dateCreated");
-
-    return { props: { user: { email: token.email }, products } };
+    let products;
+    if (ctx.query.searchInput) {
+        products = await getNextProductPage(10, null, "dateCreated", ctx.query.searchInput);
+        return { props: { user: { email: token.email }, products, initialSearchInput: ctx.query.searchInput } };
+    } else {
+        products = await getNextProductPage(10, null, "dateCreated");
+        return { props: { user: { email: token.email }, products } };
+    }
 };
 
-export default function Products({ user, products }) {
+export default function Products({ user, products, initialSearchInput }) {
     const [allProducts, setAllProducts] = useState(products);
-    const [hasMoreProducts, setHasMoreProducts] = useState(true);
-    const [searchInput, setSearchInput] = useState("");
+    const [hasMoreProducts, setHasMoreProducts] = useState(products.length !== 0);
+    const [searchInput, setSearchInput] = useState(initialSearchInput);
     const router = useRouter();
 
     const loadProducts = () => {
@@ -74,15 +79,16 @@ export default function Products({ user, products }) {
     return (
         <Layout title="Product List" user={user}>
             <InputGroup className="mb-3">
-                <FormControl onChange={handleSearch} type="text" placeholder="Search" />
+                <FormControl value={searchInput} onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
-                className="border"
+                className={allProducts.length !== 0 ? "border-top border-left border-right" : ""}
                 dataLength={allProducts.length}
                 next={loadProducts}
                 hasMore={hasMoreProducts}
                 loader={<Spinner animation="border" />}
             >
+                { allProducts.length === 0 ? <span>No matching products</span> : "" }
                 { allProducts.map(product =>
                     <ProductListItem
                         key={product.id}

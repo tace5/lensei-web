@@ -2,8 +2,10 @@ import React from "react";
 import { Form, FormControl, Button, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { firebase } from "../../firebase/firebaseClient.js";
 import { useRouter } from "next/router.js";
+import {useForm} from "react-hook-form";
 
 export default function Navigation({ user }) {
+    const { handleSubmit, register } = useForm();
     const router = useRouter();
 
     const handleLogoutClick = async () => {
@@ -13,6 +15,17 @@ export default function Navigation({ user }) {
             .then(() => {
                 router.push("/");
             });
+    }
+
+    const handleProductSearch = ({ searchInput }) => {
+        if (router.pathname === "/products") {
+            window.location.href = "/products?searchInput=" + searchInput;
+        } else {
+            router.push({
+                pathname: "/products",
+                query: { searchInput }
+            })
+        }
     }
 
     return (
@@ -26,9 +39,9 @@ export default function Navigation({ user }) {
                         <NavDropdown.Item href="/addproduct">New Product</NavDropdown.Item>
                     </NavDropdown>
                     <Nav.Link href="#suggestions">Suggestions</Nav.Link>
-                    <Form className="ml-sm-2" inline>
-                        <FormControl type="text" placeholder="Search Products" className="mr-sm-2" />
-                        <Button variant="outline-success">Search</Button>
+                    <Form onSubmit={ handleSubmit(handleProductSearch) } className="ml-sm-2" inline>
+                        <FormControl name="searchInput" ref={ register } type="text" placeholder="Search Products" className="mr-sm-2" />
+                        <Button type="submit" variant="outline-success">Search</Button>
                     </Form>
                 </Nav>
                 <Navbar.Text className="mr-sm-2">User: { user ? user.email : "" }</Navbar.Text>
