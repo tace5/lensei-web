@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React  from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Login.module.css'
 import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
+import { useRouter } from "next/router.js";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-export default function Home() {
+export default function Login() {
     const { register, handleSubmit } = useForm();
+    const router = useRouter();
 
     const checkIfAdmin = (idToken) => {
         axios.post('/api/auth/login', { idToken })
             .then(res => {
                 if (res.status === 200) {
-                    refreshToken().then(() => window.location.href = "/dashboard");
+                    refreshToken().then(() => router.push("/products/new"));
                 } else if (res.status === 401) {
                     console.log("You don't have permission for this page");
                 } else {
@@ -42,9 +42,10 @@ export default function Home() {
     return (
         <div className={styles.container}>
             <Head>
-                <title>Snapshop - Admin</title>
-                <link rel="icon" href="/favicon.ico" />
+                <title>Snapshop - Admin Login</title>
             </Head>
+
+            <h2 className="mb-4">Login</h2>
 
             <Form onSubmit={handleSubmit(handleLogin)}>
                 <Form.Group controlId="formBasicEmail">

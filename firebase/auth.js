@@ -45,10 +45,6 @@ export function AuthProvider({ children }) {
     );
 }
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
-
 export const refreshToken = async () => {
     const user = firebase.auth().currentUser;
     if (user) return user.getIdToken(true);

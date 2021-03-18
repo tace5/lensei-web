@@ -1,0 +1,20 @@
+
+.ingredients-list-item-header {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ingredients-list-item-data {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+.ingredients-list-item-info {
+    display: flex;
+    align-items: center;
+}
