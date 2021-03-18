@@ -4,33 +4,16 @@ import nookies from "nookies";
 import {firebaseAdmin} from "../firebase/firebaseAdmin.js";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Spinner } from "react-bootstrap";
+import { Button, InputGroup, FormControl, Spinner } from "react-bootstrap";
+import { getNextProductPage } from "./api/products";
+import Layout from "../components/layout/Layout.js";
+import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
-    try {
-        const currentUser = firebase.auth().currentUser;
-        const token = await currentUser.getIdToken();
-        const verifiedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const cookies = nookies.get(ctx);
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token).catch(() => null);
 
-        if (!verifiedToken.admin) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: "/",
-                },
-                props: {},
-            };
-        }
-
-        const data = {
-            productsPerPage: 20,
-            startAt: 0,
-            orderBy: "name"
-        }
-        const products = await axios.post("/api/products", data);
-
-        return { props: { products} };
-    } catch (err) {
+    if (token === null || !token.admin) {
         return {
             redirect: {
                 permanent: false,
@@ -39,14 +22,18 @@ export const getServerSideProps = async (ctx) => {
             props: {},
         };
     }
+
+    const products = await getNextProductPage(10, 0, "dateCreated");
+
+    return { props: { user: { email: token.email }, products } };
 };
 
-export default function Products({ products }) {
-    const { allProducts, setAllProducts } = useState([]);
-    const { hasMoreProducts, setHasMoreProducts } = useState(true);
+export default function Products({ user, products }) {
+    const [allProducts, setAllProducts] = useState(products);
+    const [hasMoreProducts, setHasMoreProducts] = useState(true);
 
     const loadMoreProducts = () => {
-        axios.post("/api/products", { productsPerPage: 20, startAt: allProducts.length, orderBy: "name" })
+        axios.post("/api/products", { productsPerPage: 10, startAt: allProducts.length, orderBy: "name" })
             .then(res => {
                 const nextProducts = res.data;
 
@@ -55,11 +42,15 @@ export default function Products({ products }) {
                 } else {
                     setAllProducts(allProducts.concat(nextProducts));
                 }
-            });
+            })
     }
 
     return (
-        <div>
+        <Layout title="Product List" user={user}>
+            <InputGroup>
+                <FormControl type="text" placeholder="Search" className="mr-4" />
+                <Button>Search</Button>
+            </InputGroup>
             <InfiniteScroll
                 dataLength={allProducts.length}
                 next={loadMoreProducts}
@@ -68,6 +59,6 @@ export default function Products({ products }) {
             >
                 { allProducts.map(product => <div>{ product.name }</div>) }
             </InfiniteScroll>
-        </div>
+        </Layout>
     )
 }

@@ -6,25 +6,12 @@ import axios from "axios";
 import Layout from "../components/layout/Layout.js";
 
 import ProductForm from "../components/productForm/ProductForm.js";
-import { useAuth } from "../firebase/auth.js";
 
 export const getServerSideProps = async (ctx) => {
-    try {
-        const cookies = nookies.get(ctx);
-        const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+    const cookies = nookies.get(ctx);
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token).catch(() => null);
 
-        if (!token.admin) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: "/",
-                },
-                props: {},
-            };
-        }
-
-        return { props: {} };
-    } catch (err) {
+    if (token === null || !token.admin) {
         return {
             redirect: {
                 permanent: false,
@@ -33,10 +20,11 @@ export const getServerSideProps = async (ctx) => {
             props: {},
         };
     }
+
+    return { props: { user: { email: token.email } } };
 };
 
-function AddProduct() {
-    const { user } = useAuth();
+function AddProduct({ user }) {
     const [newProductErrors, setNewProductErrors] = useState({ name: null });
 
     const router = useRouter();
@@ -55,10 +43,8 @@ function AddProduct() {
             packagingRating: parseInt(packagingRating),
             overallRating: parseInt(overallRating)
         })
-            .then(res => {
-                if (res.status === 200) {
-                    router.push("/products");
-                }
+            .then(() => {
+                router.push("/products")
             })
             .catch(errors => {
                 setNewProductErrors(errors.response.data);
@@ -82,6 +68,7 @@ function AddProduct() {
                 <ProductForm
                     onSubmit={onProductSubmit}
                     errors={newProductErrors}
+                    type="add"
                     formData={{
                         name: null,
                         price: null,

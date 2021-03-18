@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
-export default function ProductForm({ onSubmit, errors, formData }) {
+export default function ProductForm({ onSubmit, errors, formData, type, addAnotherProblem }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -20,7 +20,7 @@ export default function ProductForm({ onSubmit, errors, formData }) {
         packagingLocation
     })
 
-    const { register, handleSubmit, watch } = useForm({
+    const { register, handleSubmit, watch, reset } = useForm({
         defaultValues: otherFormData
     });
 
@@ -89,6 +89,7 @@ export default function ProductForm({ onSubmit, errors, formData }) {
                 </Form.Control>
 
                 <Form.Control
+                    className="w-50"
                     ref={ register }
                     name="barcode"
                     aria-describedby="basic-addon1"
@@ -159,7 +160,7 @@ export default function ProductForm({ onSubmit, errors, formData }) {
                     </Form.Group>
                 </Col>
             </Row>
-            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">Add Product</Button></div>
+            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">{ type === "add" ? "Add" : "Update" } Product</Button></div>
         </Form>
     )
 }

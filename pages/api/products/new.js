@@ -57,16 +57,17 @@ export default async function handleNewProduct(req, res) {
             format: barcodeFormat,
             code: barcode,
             manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLocation.lat, manufacturingLocation.lng),
-            packagingLocation: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
-            transportDistance: getDistance(manufacturingLocation, packagingLocation),
+            packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
+            manufacturingDistance: Math.round(getDistance(manufacturingLocation, packagingLocation) * 100) / 100,
             transportWeight,
             ingredientsRating: calculateIngredientsRating(ingredientsList),
             companyRating,
             packagingRating,
-            overallRating
+            overallRating,
+            dateCreated: firebaseAdmin.firestore.Timestamp.now()
         })
 
-        res.status(200);
+        res.status(200).json();
     } else {
         const errors = { name: "A product with that name already exists" }
         res.status(409).json(errors);
