@@ -4,7 +4,6 @@ import {firebaseAdmin} from "../../firebase/firebaseAdmin.js";
 import {getProduct} from "../api/products/[id].js";
 import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
-import { Row } from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 

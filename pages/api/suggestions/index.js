@@ -20,15 +20,17 @@ export async function getNextSuggestionsPage(suggestionsPerPage, lastDocId) {
 
     let suggestions = [];
     suggestionsDocs.forEach(suggestionDoc => {
-        const { dateCreated, ...data } = suggestionDoc.data();
+        const { dateCreated, author, format, code } = suggestionDoc.data();
 
-        const product = {
-            ...data,
+        const suggestion = {
             id: suggestionDoc.id,
+            author,
+            format,
+            code,
             dateCreated: new Date(dateCreated._seconds * 1000).toUTCString()
         }
 
-        suggestions.push(product);
+        suggestions.push(suggestion);
     });
 
     return Promise.all(suggestions.map(async suggestion => {

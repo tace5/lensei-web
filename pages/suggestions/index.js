@@ -7,6 +7,7 @@ import SuggestionsListItem from "../../components/suggestionsListItem/Suggestion
 import nookies from "nookies";
 import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
 import { getNextSuggestionsPage } from "../api/suggestions";
+import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -30,6 +31,8 @@ export default function SuggestionsList({ user, suggestions }) {
     const [allSuggestions, setAllSuggestions] = useState(suggestions);
     const [hasMoreSuggestions, setHasMoreSuggestions] = useState(suggestions.length !== 0);
 
+    const router = useRouter();
+
     const loadSuggestions = () => {
         const lastSuggestion = allSuggestions[allSuggestions.length - 1];
 
@@ -43,6 +46,10 @@ export default function SuggestionsList({ user, suggestions }) {
                     setAllSuggestions(allSuggestions.concat(nextSuggestions));
                 }
             })
+    }
+
+    const onOpenClick = suggestionId => {
+        router.push("/suggestions/" + suggestionId);
     }
 
     const breadCrumbs = [
@@ -65,6 +72,7 @@ export default function SuggestionsList({ user, suggestions }) {
                     <SuggestionsListItem
                         key={suggestion.code}
                         suggestion={suggestion}
+                        onViewClick={onOpenClick}
                     />)
                 }
             </InfiniteScroll>

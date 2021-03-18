@@ -14,7 +14,7 @@ export default function SuggestionsListItem({ onViewClick, suggestion }) {
                 </div>
                 <div className="d-flex flex-row">
                     <div className="d-flex align-items-center mr-3">Suggested {daysSinceSuggestionString}</div>
-                    <Button className="mr-2" onClick={onViewClick} size="sm">Open</Button>
+                    <Button className="mr-2" onClick={() => onViewClick(suggestion.id)} size="sm">Open</Button>
                 </div>
             </Card.Header>
         </Card>
