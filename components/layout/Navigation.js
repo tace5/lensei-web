@@ -34,8 +34,8 @@ export default function Navigation({ user }) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <NavDropdown title="Index" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="/products">All Index</NavDropdown.Item>
+                    <NavDropdown title="Products" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/products">All Products</NavDropdown.Item>
                         <NavDropdown.Item href="/products/new">New Product</NavDropdown.Item>
                     </NavDropdown>
                     <Nav.Link href="#suggestions">Suggestions</Nav.Link>

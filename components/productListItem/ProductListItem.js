@@ -1,20 +1,18 @@
-import { Row, Col, Accordion, AccordionCollapse, AccordionToggle, Button, Card } from "react-bootstrap";
+import {Row, Col, Accordion, AccordionCollapse, AccordionToggle, Button, Card, Modal} from "react-bootstrap";
 import styles from "./ProductListItem.module.css";
 import React from "react";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function ProductListItem({ product, onRemove, onView}) {
-    const handleViewClick = e => {
+export default function ProductListItem({ product, onDelete, onView }) {
+    const onViewClick = e => {
         e.stopPropagation();
-
         onView(product.id);
     }
 
-    const handleRemoveClick = e => {
+    const onDeleteClick = e => {
         e.stopPropagation();
-
-        onRemove(product.id);
+        onDelete(product.id);
     }
 
     return (
@@ -24,8 +22,8 @@ export default function ProductListItem({ product, onRemove, onView}) {
                     <b>{ product.label }</b>
                     <div className={styles["ingredients-list-item-info"]}>
                         <span className="mr-5">Overall Rating: <b>{ product.overallRating }</b></span>
-                        <Button className="mr-2" onClick={handleViewClick} size="sm">View</Button>
-                        <Button onClick={handleRemoveClick} size="sm" variant="danger">Remove</Button>
+                        <Button className="mr-2" onClick={onViewClick} size="sm">View</Button>
+                        <Button onClick={onDeleteClick} size="sm" variant="danger">Delete</Button>
                     </div>
                 </div>
                 <FontAwesomeIcon icon={ faAngleDown } />

@@ -55,8 +55,15 @@ export default function ProductsList({ user, products, initialSearchInput }) {
             })
     }
 
-    const onProductRemove = productId => {
-        // TODO
+    const onProductDelete = productId => {
+        axios.post("/api/products/delete", { id: productId })
+            .then(() => {
+                const newProductsList = allProducts.filter(prod => {
+                    return prod.id !== productId
+                })
+
+                setAllProducts(newProductsList);
+            })
     }
 
     const onProductView = productId => {
@@ -101,7 +108,7 @@ export default function ProductsList({ user, products, initialSearchInput }) {
                         key={product.id}
                         product={product}
                         onView={onProductView}
-                        onRemove={onProductRemove}
+                        onDelete={onProductDelete}
                     >
                         { product.name }
                     </ProductListItem>)

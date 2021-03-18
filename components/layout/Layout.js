@@ -5,7 +5,7 @@ import Navigation from "./Navigation.js";
 import styles from "./Layout.module.css";
 import { Breadcrumb, BreadcrumbItem} from "react-bootstrap";
 
-export default function Layout({ title, breadcrumbs, user, children }) {
+export default function Layout({ title, header, breadcrumbs, user, children }) {
     return (
         <div>
             <Head>
@@ -16,10 +16,10 @@ export default function Layout({ title, breadcrumbs, user, children }) {
             <Navigation user={user} />
 
             <div className={styles["content-wrapper"]}>
-                { title ? <h2 className="mb-4">{ title }</h2> : ""}
+                { header ? header : (<h2 className="mb-4">{ title }</h2>) }
                 { breadcrumbs
                     ? <Breadcrumb className="mb-4">
-                        { breadcrumbs.map((crumb, idx) => {
+                        { breadcrumbs.map(crumb => {
                             return <BreadcrumbItem key={crumb.name} href={ crumb.href }>{ crumb.name }</BreadcrumbItem>
                         }) }
                     </Breadcrumb> : ""}
