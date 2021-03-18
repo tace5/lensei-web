@@ -24,27 +24,28 @@ export async function getProduct(id) {
 
     return {
         id: productDoc.id,
-        name: data.name,
+        name: data.label,
         barcodeFormat: data.format,
-        barcode: data.format,
+        barcode: data.code,
         price: data.price,
         label: data.label,
         dislikes: data.dislikes,
         likes: data.likes,
         ingredientsList,
         dateCreated: new Date(data.dateCreated._seconds * 1000).toUTCString(),
-        packagingLoc: {
+        packagingLocation: {
             lat: data.packagingLoc.latitude,
             lng: data.packagingLoc.longitude
         },
-        manufacturingLoc: {
+        manufacturingLocation: {
             lat: data.manufacturingLoc.latitude,
             lng: data.manufacturingLoc.longitude
         },
         ingredientsRating: data.ingredientsRating,
         packagingRating: data.packagingRating,
         transportWeight: data.transportWeight,
-        overallRating: data.overallRating
+        overallRating: data.overallRating,
+        companyRating: data.companyRating
     };
 }
 
@@ -52,8 +53,6 @@ export default async function handleProduct(req, res) {
     const { id } = req.query;
 
     const product = await getProduct(id);
-
-    console.log(product);
 
     res.status(200).json(product);
 }

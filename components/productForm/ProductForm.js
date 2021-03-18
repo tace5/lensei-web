@@ -4,9 +4,9 @@ import IngredientsList from "../ingredientsList/IngredientsList.js";
 import Map from "../map/Map.js";
 import React, {useState} from "react";
 import axios from "axios";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-export default function ProductForm({ onSubmit, errors, formData, type, addAnotherProblem }) {
+export default function ProductForm({ onSubmit, errors, formData, type }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -20,7 +20,7 @@ export default function ProductForm({ onSubmit, errors, formData, type, addAnoth
         packagingLocation
     })
 
-    const { register, handleSubmit, watch, reset } = useForm({
+    const { register, handleSubmit, watch } = useForm({
         defaultValues: otherFormData
     });
 
