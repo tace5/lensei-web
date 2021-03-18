@@ -4,11 +4,11 @@ import React from "react";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function ProductListItem({ product, onRemove, onEdit}) {
-    const handleEditClick = e => {
+export default function ProductListItem({ product, onRemove, onView}) {
+    const handleViewClick = e => {
         e.stopPropagation();
 
-        onEdit(product.id);
+        onView(product.id);
     }
 
     const handleRemoveClick = e => {
@@ -24,7 +24,7 @@ export default function ProductListItem({ product, onRemove, onEdit}) {
                     <b>{ product.label }</b>
                     <div className={styles["ingredients-list-item-info"]}>
                         <span className="mr-5">Overall Rating: <b>{ product.overallRating }</b></span>
-                        <Button className="mr-2" onClick={handleEditClick} size="sm">Edit</Button>
+                        <Button className="mr-2" onClick={handleViewClick} size="sm">View</Button>
                         <Button onClick={handleRemoveClick} size="sm" variant="danger">Remove</Button>
                     </div>
                 </div>

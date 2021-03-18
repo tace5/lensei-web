@@ -16,7 +16,7 @@ export default function Login() {
         axios.post('/api/auth/login', { idToken })
             .then(res => {
                 if (res.status === 200) {
-                    refreshToken().then(() => router.push("/addproduct"));
+                    refreshToken().then(() => router.push("/products/new"));
                 } else if (res.status === 401) {
                     console.log("You don't have permission for this page");
                 } else {

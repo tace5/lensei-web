@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import nookies from "nookies";
 import { useRouter } from 'next/router'
-import { firebaseAdmin } from "../firebase/firebaseAdmin";
+import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
 import axios from "axios";
-import Layout from "../components/layout/Layout.js";
+import Layout from "../../components/layout/Layout.js";
 
-import ProductForm from "../components/productForm/ProductForm.js";
+import ProductForm from "../../components/productForm/ProductForm.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -57,7 +57,7 @@ function AddProduct({ user }) {
             name: "Products"
         },
         {
-            href: "/addproduct",
+            href: "/products/new",
             name: "New Product"
         }
     ]

@@ -1,14 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import nookies from "nookies";
-import {firebaseAdmin} from "../firebase/firebaseAdmin.js";
+import {firebaseAdmin} from "../../firebase/firebaseAdmin.js";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { InputGroup, FormControl, Spinner } from "react-bootstrap";
-import { getNextProductPage } from "./api/products";
-import Layout from "../components/layout/Layout.js";
-import { useRouter } from "next/router.js";
-import ProductListItem from "../components/productListItem/ProductListItem.js";
+import { getNextProductPage } from "../api/products";
+import Layout from "../../components/layout/Layout.js";
+import ProductListItem from "../../components/productListItem/ProductListItem.js";
+import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -34,7 +34,7 @@ export const getServerSideProps = async (ctx) => {
     }
 };
 
-export default function Products({ user, products, initialSearchInput }) {
+export default function ProductsList({ user, products, initialSearchInput }) {
     const [allProducts, setAllProducts] = useState(products);
     const [hasMoreProducts, setHasMoreProducts] = useState(products.length !== 0);
     const [searchInput, setSearchInput] = useState(initialSearchInput);
@@ -59,8 +59,8 @@ export default function Products({ user, products, initialSearchInput }) {
         // TODO
     }
 
-    const onProductEdit = productId => {
-        // TODO
+    const onProductView = productId => {
+        router.push("/products/" + productId);
     }
 
     const handleSearch = e => {
@@ -76,8 +76,15 @@ export default function Products({ user, products, initialSearchInput }) {
             })
     }
 
+    const breadCrumbs = [
+        {
+            href: "/products",
+            name: "Products "
+        }
+    ]
+
     return (
-        <Layout title="Product List" user={user}>
+        <Layout title="Product List" user={user} breadcrumbs={breadCrumbs}>
             <InputGroup className="mb-3">
                 <FormControl value={searchInput} onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
@@ -93,7 +100,7 @@ export default function Products({ user, products, initialSearchInput }) {
                     <ProductListItem
                         key={product.id}
                         product={product}
-                        onEdit={onProductEdit}
+                        onView={onProductView}
                         onRemove={onProductRemove}
                     >
                         { product.name }
