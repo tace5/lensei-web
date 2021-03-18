@@ -4,6 +4,9 @@ import {firebaseAdmin} from "../../firebase/firebaseAdmin.js";
 import {getProduct} from "../api/products/[id].js";
 import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
+import { Row } from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -42,10 +45,29 @@ export default function ViewProduct({ user, product }) {
         }
     ]
 
-    console.log(product)
+    const title = (
+        <div>
+            { product.name }
+            <div style={{float: "right"}}>
+                <span className="font-weight-bold mr-3" style={{color: "green", fontSize: "24px"}}>{ product.likes }</span>
+                <FontAwesomeIcon
+                    className="mr-4"
+                    style={{color: "green"}}
+                    size="1x"
+                    icon={faThumbsUp}
+                    flip="horizontal" />
+                <FontAwesomeIcon
+                    style={{color: "red"}}
+                    size="1x"
+                    icon={faThumbsDown}
+                />
+                <span className="font-weight-bold ml-3" style={{color: "red", fontSize: "24px"}}>{ product.dislikes }</span>
+            </div>
+        </div>
+    )
 
     return (
-        <Layout title={product.label} user={user} breadcrumbs={breadCrumbs}>
+        <Layout title={title} user={user} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
                 errors={updateProductErrors}
