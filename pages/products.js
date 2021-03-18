@@ -32,12 +32,13 @@ export const getServerSideProps = async (ctx) => {
 export default function Products({ user, products }) {
     const [allProducts, setAllProducts] = useState(products);
     const [hasMoreProducts, setHasMoreProducts] = useState(true);
+    const [searchInput, setSearchInput] = useState("");
     const router = useRouter();
 
-    const loadMoreProducts = () => {
+    const loadProducts = () => {
         const lastProduct = allProducts[allProducts.length - 1];
 
-        axios.post("/api/products", { productsPerPage: 20, lastDocId: lastProduct.id, orderBy: "dateCreated" })
+        axios.post("/api/products", { productsPerPage: 10, lastDocId: lastProduct.id, orderBy: "dateCreated", searchInput })
             .then(res => {
                 const nextProducts = res.data;
 
@@ -57,15 +58,28 @@ export default function Products({ user, products }) {
         // TODO
     }
 
+    const handleSearch = e => {
+        setSearchInput(e.target.value);
+        axios.post("/api/products/search", { productsPerPage: 10, searchInput: e.target.value, orderBy: "dateCreated" })
+            .then(res => {
+                if (res.data.length === 0) {
+                    setHasMoreProducts(false);
+                } else {
+                    setHasMoreProducts(true);
+                }
+                setAllProducts(res.data);
+            })
+    }
+
     return (
         <Layout title="Product List" user={user}>
             <InputGroup className="mb-3">
-                <FormControl type="text" placeholder="Search" />
+                <FormControl onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
                 className="border"
                 dataLength={allProducts.length}
-                next={loadMoreProducts}
+                next={loadProducts}
                 hasMore={hasMoreProducts}
                 loader={<Spinner animation="border" />}
             >

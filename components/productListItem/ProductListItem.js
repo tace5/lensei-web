@@ -32,16 +32,15 @@ export default function ProductListItem({ product, onRemove, onEdit}) {
             </AccordionToggle>
             <AccordionCollapse className="border-bottom" eventKey={ product.id }>
                 <Card.Body>
+                    <Row className="mb-3">
+                        <Col className="text-center">Company Rating: <b>{ product.companyRating }</b></Col>
+                        <Col className="text-center">Ingredients Rating: <b>{ product.ingredientsRating }</b></Col>
+                        <Col className="text-center">Packaging Rating: <b>{ product.packagingRating }</b></Col>
+                    </Row>
                     <Row>
-                        <Col>
-
-                        </Col>
-                        <Col>
-
-                        </Col>
-                        <Col>
-
-                        </Col>
+                        <Col className="text-center">Price: <b>£{ product.price }</b></Col>
+                        <Col className="text-center"><span className="mr-2">Likes: <b>{product.likes}</b></span> Dislikes: <b>{product.dislikes}</b></Col>
+                        <Col className="text-center">Added <b>{ new Date().getDate() - new Date(product.dateCreated).getDate() }</b> Days Ago</Col>
                     </Row>
                 </Card.Body>
             </AccordionCollapse>
