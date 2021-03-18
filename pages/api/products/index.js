@@ -1,8 +1,11 @@
 import { database } from "../../../firebase/db.js";
 
 export default async function productsHandler(req, res) {
+    const { productsPerPage, startAt, orderBy } = req.body;
+
     const productsRef = database.collection("products");
-    const productsDocs = await productsRef.get();
+
+    const productsDocs = productsRef.orderBy(orderBy).startAt(startAt).limit(productsPerPage);
 
     let products = [];
     productsDocs.forEach(productDoc => {
