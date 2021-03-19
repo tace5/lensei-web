@@ -1,4 +1,4 @@
-import {database} from "../../../firebase/db.js";
+import { database } from "../../../firebase/db.js";
 
 export async function getProduct(id) {
     const productsRef = database.collection("products");
@@ -6,7 +6,7 @@ export async function getProduct(id) {
 
     const data = productDoc.data();
 
-    const getIngredient = async (ingredientRef) => {
+    const getIngredient = async ingredientRef => {
         const ingredientDoc = await ingredientRef.get();
         const ingredientData = ingredientDoc.data();
         return {

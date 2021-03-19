@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
-export default function ProductForm({ onSubmit, errors, formData, type }) {
+export default function ProductForm({ onSubmit, errors, formData, type, photoUrls }) {
     const {
         ingredients,
         manufacturingLocation,
