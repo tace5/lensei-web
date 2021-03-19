@@ -77,8 +77,6 @@ export default function ProductsList({ products, initialSearchInput }) {
             .then(res => {
                 if (res.data.length === 0) {
                     setHasMoreProducts(false);
-                } else {
-                    setHasMoreProducts(true);
                 }
                 setAllProducts(res.data);
             })
@@ -94,7 +92,7 @@ export default function ProductsList({ products, initialSearchInput }) {
     return (
         <Layout title="Product List" breadcrumbs={breadCrumbs}>
             <InputGroup className="mb-3">
-                <FormControl value={searchInput} onChange={handleSearch} type="text" placeholder="Search" />
+                <FormControl onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
                 className={allProducts.length !== 0 ? "border-top border-left border-right" : ""}
