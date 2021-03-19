@@ -7,6 +7,7 @@ import ProductForm from "../../components/productForm/ProductForm.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -30,8 +31,29 @@ export const getServerSideProps = async (ctx) => {
 export default function ViewProduct({ product }) {
     const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
 
-    const onProductUpdate = data => {
+    const router = useRouter();
 
+    const onProductUpdate = ({name, price, barcodeFormat, barcode, ingredientsList, locations, transportWeight, companyRating, packagingRating, overallRating}) => {
+        axios.post("/api/products/save", {
+            id: product.id,
+            name,
+            price: parseFloat(price),
+            barcodeFormat,
+            barcode,
+            ingredientsList,
+            manufacturingLocation: locations.manufacturingLocation,
+            packagingLocation: locations.packagingLocation,
+            transportWeight: parseFloat(transportWeight),
+            companyRating: parseInt(companyRating),
+            packagingRating: parseInt(packagingRating),
+            overallRating: parseInt(overallRating)
+        })
+            .then(() => {
+                router.push("/products")
+            })
+            .catch(errors => {
+                setUpdateProductErrors(errors.response.data);
+            })
     }
 
     const breadCrumbs = [

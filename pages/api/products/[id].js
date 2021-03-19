@@ -6,8 +6,9 @@ export async function getProduct(id) {
 
     const data = productDoc.data();
 
-    const getIngredient = async ingredientRef => {
-        const ingredientDoc = await ingredientRef.get();
+    const ingredientsRef = database.collection("ingredients");
+    const getIngredient = async ingredientId => {
+        const ingredientDoc = await ingredientsRef.doc(ingredientId).get();
         const ingredientData = ingredientDoc.data();
         return {
             id: ingredientDoc.id,

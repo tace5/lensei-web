@@ -2,7 +2,7 @@ import React from "react";
 import { Card, AccordionToggle, AccordionCollapse, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faAngleDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import { calcRatingColor } from "../../helpers/colors.js";
+import { calcRatingColor } from "../../helpers/rating.js";
 
 import styles from "./IngredientsListItem.module.css";
 import styles2 from "./IngredientsList.module.css";

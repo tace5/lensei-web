@@ -1,30 +1,7 @@
 import { database } from "../../../firebase/db";
 import * as firebaseAdmin from "firebase-admin";
-
-function calculateIngredientsRating(ingredientsList) {
-    const ratingSum = ingredientsList.reduce(((sum, ingredient) => sum + parseInt(ingredient.rating)), 0);
-
-    if (ratingSum === 0 && ingredientsList.length === 0) {
-        return 5;
-    } else {
-        return Math.round(ratingSum / ingredientsList.length);
-    }
-}
-
-function rad(x) {
-    return x * Math.PI / 180;
-}
-
-function getDistance(p1, p2) {
-    const R = 6378137;
-    const dLat = rad(p2.lat - p1.lat);
-    const dLong = rad(p2.lng - p1.lng);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
-        Math.sin(dLong / 2) * Math.sin(dLong / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c) / 1000;
-}
+import {calculateIngredientsRating} from "../../../helpers/rating.js";
+import {getDistance} from "../../../helpers/distance.js";
 
 export async function createProduct(name, price, barcodeFormat, barcode, ingredientsList, manufacturingLocation, packagingLocation, transportWeight, companyRating, packagingRating, overallRating) {
     const productsRef = database.collection("products");

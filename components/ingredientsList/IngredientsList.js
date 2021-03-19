@@ -6,7 +6,7 @@ import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from 
 
 import styles from "./IngredientsList.module.css";
 import axios from "axios";
-import {calcRatingColor} from "../../helpers/colors.js";
+import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
     const { register, handleSubmit, reset } = useForm();

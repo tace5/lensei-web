@@ -3,7 +3,7 @@ import styles from "./ProductListItem.module.css";
 import React from "react";
 import {faAngleDown, faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { calcRatingColor } from "../../helpers/colors.js";
+import { calcRatingColor } from "../../helpers/rating.js";
 
 export default function ProductListItem({ product, onDelete, onView }) {
     const onViewClick = e => {

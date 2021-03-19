@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import styles from "./ProductForm.module.css";
-import {calcRatingColor} from "../../helpers/colors.js";
+import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function ProductForm({ onSubmit, errors, formData, submitBtnText, photoUrls }) {
     const {
@@ -28,7 +28,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
         overallRating: formData.overallRating
     })
 
-    const { register, handleSubmit, watch } = useForm({
+    const { register, handleSubmit } = useForm({
         defaultValues: otherFormData
     });
 
