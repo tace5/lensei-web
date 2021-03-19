@@ -32,7 +32,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
     }
 
     const handleSubmitIngredient = ({ ingredientName, rating, description }) => {
-        axios.post("/api/ingredients/new", { ingredientName, rating, description })
+        axios.post("/api/ingredients/new", { ingredientName, rating: parseInt(rating), description })
             .then(res => {
                 const newIngredient = res.data;
 

@@ -78,6 +78,16 @@ export default function ViewSuggestion({ suggestion }) {
             })
     }
 
+    const onSuggestionReject = () => {
+        axios.post("/api/suggestions/delete", { id: suggestion.id })
+            .then(() => {
+                router.push("/suggestions");
+            })
+            .catch(errors => {
+                setSuggestionErrors(errors.response.data);
+            })
+    }
+
     const title = author.fullName + ": " + suggestion.format + "-" + suggestion.code;
     const breadCrumbs = [
         {
@@ -95,7 +105,7 @@ export default function ViewSuggestion({ suggestion }) {
             <div>
                 { title }
                 <div style={{float: "right"}}>
-                    <Button variant="danger" size="lg">Reject</Button>
+                    <Button onClick={onSuggestionReject} variant="danger" size="lg">Reject</Button>
                 </div>
             </div>
         </h2>
