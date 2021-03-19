@@ -10,7 +10,7 @@ export default function ImageGallery({ imageUrls }) {
     )
 
     return (
-        <Carousel>
+        <Carousel interval={null}>
             { imgs }
         </Carousel>
     )
