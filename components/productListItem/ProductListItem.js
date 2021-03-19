@@ -1,7 +1,7 @@
 import {Row, Col, Accordion, AccordionCollapse, AccordionToggle, Button, Card, Modal} from "react-bootstrap";
 import styles from "./ProductListItem.module.css";
 import React from "react";
-import {faAngleDown, faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import {faAngleDown, faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function calcRatingColor(rating) {
@@ -40,21 +40,21 @@ export default function ProductListItem({ product, onDelete, onView }) {
                 <div className={styles["product-list-item-data"]}>
                     <b>{ product.label }</b>
                     <div className={styles["ingredients-list-item-info"]}>
-                        <span className="mr-5 d-flex align-items-center">
+                        <span className="mr-4 d-flex align-items-center">
                             Rating:
                             <div
-                                className={"ml-2 " + styles["overall-rating"]}
+                                className={"ml-2 border " + styles["overall-rating"]}
                                 style={{backgroundColor: `rgb(${overallRatingColor.r}, ${overallRatingColor.g}, ${overallRatingColor.b})`}}
                             >{ product.overallRating }</div>
                         </span>
-                        <Button className="mr-2" onClick={onViewClick} size="sm">View</Button>
-                        <Button onClick={onDeleteClick} size="sm" variant="danger">Delete</Button>
+                        <Button style={{width: 40, color: "#007bff" }} className="mr-3 bg-transparent border-0" onClick={onViewClick}><FontAwesomeIcon size="lg" icon={ faEdit } /></Button>
+                        <Button style={{width: 40, color: "#dc3545" }} className="bg-transparent border-0" onClick={onDeleteClick} variant="danger"><FontAwesomeIcon size="lg" icon={faTrashAlt} /></Button>
                     </div>
                 </div>
                 <FontAwesomeIcon icon={ faAngleDown } />
             </AccordionToggle>
             <AccordionCollapse className="border-bottom" eventKey={ product.id }>
-                <Card.Body className="p-4">
+                <Card.Body className={"p-4"}>
                     <Row className="mb-5 mt-3 d-flex justify-content-around">
                         <Col style={{backgroundColor: `rgb(${companyRatingColor.r}, ${companyRatingColor.g}, ${companyRatingColor.b})`}} className={"text-center border " + styles["product-rating"]}>
                             <b>Company</b> <br /> <b style={{fontSize: "52px"}}>{ product.companyRating }</b>
