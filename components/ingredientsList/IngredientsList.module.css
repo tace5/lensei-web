@@ -28,3 +28,14 @@
     margin-top: 10px;
     margin-left: 20px;
 }
+
+.ingredient-rating {
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    padding: 2px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 2px lightgray;
+}

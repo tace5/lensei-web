@@ -1,4 +1,4 @@
-import {database} from "../../../firebase/db.js";
+import { database } from "../../../firebase/db.js";
 
 export async function getProduct(id) {
     const productsRef = database.collection("products");
@@ -6,8 +6,9 @@ export async function getProduct(id) {
 
     const data = productDoc.data();
 
-    const getIngredient = async (ingredientRef) => {
-        const ingredientDoc = await ingredientRef.get();
+    const ingredientsRef = database.collection("ingredients");
+    const getIngredient = async ingredientId => {
+        const ingredientDoc = await ingredientsRef.doc(ingredientId).get();
         const ingredientData = ingredientDoc.data();
         return {
             id: ingredientDoc.id,
@@ -49,10 +50,8 @@ export async function getProduct(id) {
     };
 }
 
-export default async function handleProduct(req, res) {
+export default function handleProduct(req, res) {
     const { id } = req.query;
 
-    const product = await getProduct(id);
-
-    res.status(200).json(product);
+    getProduct(id).then(product => res.status(200).json(product));
 }

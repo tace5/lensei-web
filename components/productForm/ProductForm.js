@@ -5,8 +5,10 @@ import Map from "../map/Map.js";
 import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import styles from "./ProductForm.module.css";
+import {calcRatingColor} from "../../helpers/rating.js";
 
-export default function ProductForm({ onSubmit, errors, formData, type }) {
+export default function ProductForm({ onSubmit, errors, formData, submitBtnText, photoUrls }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -19,8 +21,14 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
         manufacturingLocation,
         packagingLocation
     })
+    const [sliderVals, setSliderVals] = useState({
+        transportWeight: formData.transportWeight,
+        companyRating: formData.companyRating,
+        packagingRating: formData.packagingRating,
+        overallRating: formData.overallRating
+    })
 
-    const { register, handleSubmit, watch } = useForm({
+    const { register, handleSubmit } = useForm({
         defaultValues: otherFormData
     });
 
@@ -114,7 +122,7 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
                 </Col>
                 <Col>
                     <Form.Group className="mb-5" controlId="transportWeight">
-                        <Form.Label>Transport Weight: <b>{ watch("transportWeight") }</b></Form.Label>
+                        <Form.Label>Transport Weight: <b>{ sliderVals.transportWeight }</b></Form.Label>
                         <Form.Control
                             name="transportWeight"
                             ref={ register }
@@ -122,11 +130,18 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
                             min={1}
                             max={10}
                             step={0.1}
+                            onChange={e => setSliderVals({ ...sliderVals, transportWeight: e.target.value })}
                         />
                     </Form.Group>
                     <h3 className="mb-3">Ratings:</h3>
                     <Form.Group controlId="companyRating">
-                        <Form.Label>Company Rating: <b>{ watch("companyRating") }</b></Form.Label>
+                        <Form.Label className="d-flex align-items-center">
+                            Company:
+                            <div
+                                className={"ml-2 border " + styles["rating"]}
+                                style={{backgroundColor: calcRatingColor(sliderVals.companyRating)}}
+                            >{ sliderVals.companyRating }</div>
+                        </Form.Label>
                         <FormControl
                             name="companyRating"
                             ref={ register }
@@ -134,10 +149,17 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
                             min={1}
                             max={10}
                             step={1}
+                            onChange={e => setSliderVals({ ...sliderVals, companyRating: e.target.value })}
                         />
                     </Form.Group>
                     <Form.Group controlId="packagingRating">
-                        <Form.Label>Packaging Rating: <b>{ watch("packagingRating") }</b></Form.Label>
+                        <Form.Label className="d-flex align-items-center">
+                            Packaging:
+                            <div
+                                className={"ml-2 border " + styles["rating"]}
+                                style={{backgroundColor: calcRatingColor(sliderVals.packagingRating)}}
+                            >{ sliderVals.packagingRating }</div>
+                        </Form.Label>
                         <FormControl
                             name="packagingRating"
                             ref={ register }
@@ -145,10 +167,17 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
                             min={1}
                             max={10}
                             step={1}
+                            onChange={e => setSliderVals({ ...sliderVals, packagingRating: e.target.value })}
                         />
                     </Form.Group>
                     <Form.Group controlId="overallRating">
-                        <Form.Label>Overall Rating: <b>{ watch("overallRating") }</b></Form.Label>
+                        <Form.Label className="d-flex align-items-center">
+                            Overall:
+                            <div
+                                className={"ml-2 border " + styles["rating"]}
+                                style={{backgroundColor: calcRatingColor(sliderVals.overallRating)}}
+                            >{ sliderVals.overallRating }</div>
+                        </Form.Label>
                         <FormControl
                             name="overallRating"
                             ref={ register }
@@ -156,11 +185,12 @@ export default function ProductForm({ onSubmit, errors, formData, type }) {
                             min={1}
                             max={10}
                             step={1}
+                            onChange={e => setSliderVals({ ...sliderVals, overallRating: e.target.value })}
                         />
                     </Form.Group>
                 </Col>
             </Row>
-            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">{ type === "add" ? "Add" : "Update" } Product</Button></div>
+            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">{ submitBtnText }</Button></div>
         </Form>
     )
 }

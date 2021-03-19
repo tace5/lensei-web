@@ -6,6 +6,8 @@ import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -23,14 +25,35 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.query;
     const product = await getProduct(id);
-    return { props: { user: { email: token.email }, product } };
+    return { props: { product } };
 }
 
-export default function ViewProduct({ user, product }) {
+export default function ViewProduct({ product }) {
     const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
 
-    const onProductUpdate = data => {
+    const router = useRouter();
 
+    const onProductUpdate = ({name, price, barcodeFormat, barcode, ingredientsList, locations, transportWeight, companyRating, packagingRating, overallRating}) => {
+        axios.post("/api/products/save", {
+            id: product.id,
+            name,
+            price: parseFloat(price),
+            barcodeFormat,
+            barcode,
+            ingredientsList,
+            manufacturingLocation: locations.manufacturingLocation,
+            packagingLocation: locations.packagingLocation,
+            transportWeight: parseFloat(transportWeight),
+            companyRating: parseInt(companyRating),
+            packagingRating: parseInt(packagingRating),
+            overallRating: parseInt(overallRating)
+        })
+            .then(() => {
+                router.push("/products")
+            })
+            .catch(errors => {
+                setUpdateProductErrors(errors.response.data);
+            })
     }
 
     const breadCrumbs = [
@@ -68,10 +91,11 @@ export default function ViewProduct({ user, product }) {
     )
 
     return (
-        <Layout title={product.label} header={header} user={user} breadcrumbs={breadCrumbs}>
+        <Layout title={product.label} header={header} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
                 errors={updateProductErrors}
+                submitBtnText="Save Product"
                 type="update"
                 formData={{
                     ingredients: product.ingredientsList,

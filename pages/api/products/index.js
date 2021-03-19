@@ -45,9 +45,8 @@ export async function getNextProductPage(productsPerPage, lastDocId, orderBy, se
     return products
 }
 
-export default async function handleProducts(req, res) {
+export default function handleProducts(req, res) {
     const { productsPerPage, lastDocId, orderBy } = req.body;
-    const nextProductPage = await getNextProductPage(productsPerPage, lastDocId, orderBy);
-
-    res.status(200).json(nextProductPage);
+    getNextProductPage(productsPerPage, lastDocId, orderBy)
+        .then(nextProductPage => res.status(200).json(nextProductPage))
 }

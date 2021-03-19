@@ -21,10 +21,10 @@ export const getServerSideProps = async (ctx) => {
         };
     }
 
-    return { props: { user: { email: token.email } } };
+    return { props: {} };
 };
 
-function AddProduct({ user }) {
+function AddProduct() {
     const [newProductErrors, setNewProductErrors] = useState({ name: null });
 
     const router = useRouter();
@@ -63,27 +63,26 @@ function AddProduct({ user }) {
     ]
 
     return (
-        <Layout title="New Product" breadcrumbs={breadCrumbs} user={user}>
-            <div>
-                <ProductForm
-                    onSubmit={onProductSubmit}
-                    errors={newProductErrors}
-                    type="add"
-                    formData={{
-                        name: null,
-                        price: null,
-                        ingredients: [],
-                        barcodeFormat: "",
-                        barcode: null,
-                        manufacturingLocation: null,
-                        packagingLocation: null,
-                        transportWeight: 5,
-                        companyRating: 5,
-                        packagingRating: 5,
-                        overallRating: 5
-                    }}
-                />
-            </div>
+        <Layout title="New Product" breadcrumbs={breadCrumbs}>
+            <ProductForm
+                onSubmit={onProductSubmit}
+                errors={newProductErrors}
+                submitBtnText="Add Product"
+                type="add"
+                formData={{
+                    name: null,
+                    price: null,
+                    ingredients: [],
+                    barcodeFormat: "",
+                    barcode: null,
+                    manufacturingLocation: null,
+                    packagingLocation: null,
+                    transportWeight: 5,
+                    companyRating: 5,
+                    packagingRating: 5,
+                    overallRating: 5
+                }}
+            />
         </Layout>
     );
 }

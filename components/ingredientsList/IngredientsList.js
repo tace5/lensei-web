@@ -6,6 +6,7 @@ import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from 
 
 import styles from "./IngredientsList.module.css";
 import axios from "axios";
+import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
     const { register, handleSubmit, reset } = useForm();
@@ -31,7 +32,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
     }
 
     const handleSubmitIngredient = ({ ingredientName, rating, description }) => {
-        axios.post("/api/ingredients/new", { ingredientName, rating, description })
+        axios.post("/api/ingredients/new", { ingredientName, rating: parseInt(rating), description })
             .then(res => {
                 const newIngredient = res.data;
 
@@ -86,7 +87,13 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                 </Col>
                                 <Col>
                                     <InputGroup>
-                                        <FormLabel>Rating: <b>{ newIngredientRating }</b></FormLabel>
+                                        <FormLabel className="d-flex align-items-center">
+                                            Rating:
+                                            <div
+                                                className={"ml-2 border " + styles["ingredient-rating"]}
+                                                style={{backgroundColor: calcRatingColor(newIngredientRating)}}
+                                            >{ newIngredientRating }</div>
+                                        </FormLabel>
                                         <FormControl
                                             name="rating"
                                             ref={ register }

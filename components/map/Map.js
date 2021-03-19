@@ -49,32 +49,34 @@ export default function Map({ locations, setLocations }) {
 
     if (isLoaded) {
         return (
-            <GoogleMap
-                ref={mapRef}
-                mapContainerStyle={{
-                    width: '100%',
-                    height: '400px'
-                }}
-                center={center}
-                zoom={2}
-                onCenterChanged={onCenterChanged}
-                onClick={handleClick}
-                options={options}
-            >
-                {locations.manufacturingLocation !== null
-                    ? <Marker label="Manufacturing" draggable position={locations.manufacturingLocation}/> : ""}
-                {locations.packagingLocation !== null
-                    ? <Marker label="Packaging" draggable position={locations.packagingLocation}/> : ""}
-                {locations.packagingLocation !== null
-                    ? <Polyline
-                        geodesic={true}
-                        path={[locations.manufacturingLocation, locations.packagingLocation]}
-                        options={{
-                            strokeColor: "#007bff"
-                        }}
+            <div className="border">
+                <GoogleMap
+                    ref={mapRef}
+                    mapContainerStyle={{
+                        width: '100%',
+                        height: '400px'
+                    }}
+                    center={center}
+                    zoom={2}
+                    onCenterChanged={onCenterChanged}
+                    onClick={handleClick}
+                    options={options}
+                >
+                    {locations.manufacturingLocation !== null
+                        ? <Marker label="Manufacturing" draggable position={locations.manufacturingLocation}/> : ""}
+                    {locations.packagingLocation !== null
+                        ? <Marker label="Packaging" draggable position={locations.packagingLocation}/> : ""}
+                    {locations.packagingLocation !== null
+                        ? <Polyline
+                            geodesic={true}
+                            path={[locations.manufacturingLocation, locations.packagingLocation]}
+                            options={{
+                                strokeColor: "#007bff"
+                            }}
 
-                    /> : ""}
-            </GoogleMap>
+                        /> : ""}
+                </GoogleMap>
+            </div>
         )
     }
 

@@ -24,10 +24,10 @@ export const getServerSideProps = async (ctx) => {
     }
 
     const suggestions = await getNextSuggestionsPage(10, null);
-    return { props: { user: { email: token.email }, suggestions } }
+    return { props: { suggestions } }
 }
 
-export default function SuggestionsList({ user, suggestions }) {
+export default function SuggestionsList({ suggestions }) {
     const [allSuggestions, setAllSuggestions] = useState(suggestions);
     const [hasMoreSuggestions, setHasMoreSuggestions] = useState(suggestions.length !== 0);
 
@@ -60,7 +60,7 @@ export default function SuggestionsList({ user, suggestions }) {
     ]
 
     return (
-        <Layout title="Product Suggestions" user={user} breadcrumbs={breadCrumbs}>
+        <Layout title="Product Suggestions" breadcrumbs={breadCrumbs}>
             <InfiniteScroll
                 dataLength={allSuggestions.length}
                 next={loadSuggestions}

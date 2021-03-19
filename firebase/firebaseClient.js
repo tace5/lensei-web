@@ -3,6 +3,7 @@
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/storage';
 
 if (typeof window !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp({
@@ -18,8 +19,6 @@ if (typeof window !== "undefined" && !firebase.apps.length) {
     firebase
         .auth()
         .setPersistence(firebase.auth.Auth.Persistence.SESSION);
-
-    window.firebase = firebase;
 }
 
 export { firebase };

@@ -47,9 +47,8 @@ export async function getNextSuggestionsPage(suggestionsPerPage, lastDocId) {
     }));
 }
 
-export default async function SuggestionsList(req, res) {
+export default function SuggestionsList(req, res) {
     const { suggestionsPerPage, lastDocId } = req.body;
-    const nextSuggestionsPage = await getNextSuggestionsPage(suggestionsPerPage, lastDocId);
-
-    res.status(200).json(nextSuggestionsPage);
+    getNextSuggestionsPage(suggestionsPerPage, lastDocId)
+        .then(nextSuggestionsPage => res.status(200).json(nextSuggestionsPage));
 }

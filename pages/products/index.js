@@ -27,17 +27,18 @@ export const getServerSideProps = async (ctx) => {
     let products;
     if (ctx.query.searchInput) {
         products = await getNextProductPage(10, null, "dateCreated", ctx.query.searchInput);
-        return { props: { user: { email: token.email }, products, initialSearchInput: ctx.query.searchInput } };
+        return { props: { products, initialSearchInput: ctx.query.searchInput } };
     } else {
         products = await getNextProductPage(10, null, "dateCreated");
-        return { props: { user: { email: token.email }, products } };
+        return { props: { products } };
     }
 };
 
-export default function ProductsList({ user, products, initialSearchInput }) {
+export default function ProductsList({ products, initialSearchInput }) {
     const [allProducts, setAllProducts] = useState(products);
     const [hasMoreProducts, setHasMoreProducts] = useState(products.length !== 0);
     const [searchInput, setSearchInput] = useState(initialSearchInput);
+
     const router = useRouter();
 
     const loadProducts = () => {
@@ -76,8 +77,6 @@ export default function ProductsList({ user, products, initialSearchInput }) {
             .then(res => {
                 if (res.data.length === 0) {
                     setHasMoreProducts(false);
-                } else {
-                    setHasMoreProducts(true);
                 }
                 setAllProducts(res.data);
             })
@@ -91,9 +90,9 @@ export default function ProductsList({ user, products, initialSearchInput }) {
     ]
 
     return (
-        <Layout title="Product List" user={user} breadcrumbs={breadCrumbs}>
+        <Layout title="Product List" breadcrumbs={breadCrumbs}>
             <InputGroup className="mb-3">
-                <FormControl value={searchInput} onChange={handleSearch} type="text" placeholder="Search" />
+                <FormControl onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
                 className={allProducts.length !== 0 ? "border-top border-left border-right" : ""}
