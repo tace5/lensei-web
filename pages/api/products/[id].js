@@ -49,10 +49,8 @@ export async function getProduct(id) {
     };
 }
 
-export default async function handleProduct(req, res) {
+export default function handleProduct(req, res) {
     const { id } = req.query;
 
-    const product = await getProduct(id);
-
-    res.status(200).json(product);
+    getProduct(id).then(product => res.status(200).json(product));
 }

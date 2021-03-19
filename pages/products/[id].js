@@ -23,10 +23,10 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.query;
     const product = await getProduct(id);
-    return { props: { user: { email: token.email }, product } };
+    return { props: {} };
 }
 
-export default function ViewProduct({ user, product }) {
+export default function ViewProduct({ product }) {
     const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
 
     const onProductUpdate = data => {
@@ -68,10 +68,11 @@ export default function ViewProduct({ user, product }) {
     )
 
     return (
-        <Layout title={product.label} header={header} user={user} breadcrumbs={breadCrumbs}>
+        <Layout title={product.label} header={header} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
                 errors={updateProductErrors}
+                submitBtnText="Save Product"
                 type="update"
                 formData={{
                     ingredients: product.ingredientsList,

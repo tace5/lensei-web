@@ -18,3 +18,25 @@
     display: flex;
     align-items: center;
 }
+
+.overall-rating {
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    padding: 3px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 2px lightgray;
+}
+
+.product-rating {
+    border-radius: 100px;
+    color: white;
+    width: 150px;
+    height: 150px;
+    padding: 30px 20px 20px;
+    flex-basis: auto;
+    flex-grow: 0;
+    text-shadow: 1px 1px 2px lightgray;
+}

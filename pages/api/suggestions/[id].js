@@ -21,10 +21,8 @@ export async function getSuggestion(suggestionId) {
     }
 }
 
-export default async function handleSuggestion(req, res) {
+export default function handleSuggestion(req, res) {
     const { id } = req.body;
 
-    const product = await getSuggestion(id);
-
-    res.status(200).json(product);
+    getSuggestion(id).then(suggestion => res.status(200).json(suggestion));
 }

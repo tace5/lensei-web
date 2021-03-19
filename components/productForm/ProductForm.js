@@ -6,7 +6,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 
-export default function ProductForm({ onSubmit, errors, formData, type, photoUrls }) {
+export default function ProductForm({ onSubmit, errors, formData, submitBtnText, photoUrls }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -160,7 +160,7 @@ export default function ProductForm({ onSubmit, errors, formData, type, photoUrl
                     </Form.Group>
                 </Col>
             </Row>
-            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">{ type === "add" ? "Add" : "Update" } Product</Button></div>
+            <div className="mt-4 d-flex justify-content-center"><Button type="submit" size="lg">{ submitBtnText }</Button></div>
         </Form>
     )
 }
