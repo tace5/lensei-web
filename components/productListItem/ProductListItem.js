@@ -3,18 +3,7 @@ import styles from "./ProductListItem.module.css";
 import React from "react";
 import {faAngleDown, faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-function calcRatingColor(rating) {
-    const r = rating > 5
-        ? Math.round(255 * (rating / 10))
-        : 255;
-
-    const g = rating <= 5
-        ? Math.round(255 * (rating / 10))
-        : 255;
-
-    return {r, g, b: 0};
-}
+import { calcRatingColor } from "../../helpers/colors.js";
 
 export default function ProductListItem({ product, onDelete, onView }) {
     const onViewClick = e => {
@@ -29,11 +18,6 @@ export default function ProductListItem({ product, onDelete, onView }) {
 
     const daysSinceCreation = new Date().getDate() - new Date(product.dateCreated).getDate();
 
-    const companyRatingColor = calcRatingColor(product.companyRating);
-    const ingredientsRatingColor = calcRatingColor(product.ingredientsRating);
-    const packagingRatingColor = calcRatingColor(product.packagingRating);
-    const overallRatingColor = calcRatingColor(product.overallRating);
-
     return (
         <Accordion>
             <AccordionToggle as={Card.Header} className={ styles["product-list-item-header"] } eventKey={ product.id }>
@@ -44,7 +28,7 @@ export default function ProductListItem({ product, onDelete, onView }) {
                             Rating:
                             <div
                                 className={"ml-2 border " + styles["overall-rating"]}
-                                style={{backgroundColor: `rgb(${overallRatingColor.r}, ${overallRatingColor.g}, ${overallRatingColor.b})`}}
+                                style={{backgroundColor: calcRatingColor(product.overallRating)}}
                             >{ product.overallRating }</div>
                         </span>
                         <Button style={{width: 40, color: "#007bff" }} className="mr-3 bg-transparent border-0" onClick={onViewClick}><FontAwesomeIcon size="lg" icon={ faEdit } /></Button>
@@ -56,13 +40,13 @@ export default function ProductListItem({ product, onDelete, onView }) {
             <AccordionCollapse className="border-bottom" eventKey={ product.id }>
                 <Card.Body className={"p-4"}>
                     <Row className="mb-5 mt-3 d-flex justify-content-around">
-                        <Col style={{backgroundColor: `rgb(${companyRatingColor.r}, ${companyRatingColor.g}, ${companyRatingColor.b})`}} className={"text-center border " + styles["product-rating"]}>
+                        <Col style={{backgroundColor: calcRatingColor(product.companyRating)}} className={"text-center border " + styles["product-rating"]}>
                             <b>Company</b> <br /> <b style={{fontSize: "52px"}}>{ product.companyRating }</b>
                         </Col>
-                        <Col style={{backgroundColor: `rgb(${ingredientsRatingColor.r}, ${ingredientsRatingColor.g}, ${ingredientsRatingColor.b})`}} className={"text-center border " + styles["product-rating"]}>
+                        <Col style={{backgroundColor: calcRatingColor(product.ingredientsRating)}} className={"text-center border " + styles["product-rating"]}>
                             Ingredients <br /><b style={{fontSize: "52px"}}>{ product.ingredientsRating }</b>
                         </Col>
-                        <Col style={{backgroundColor: `rgb(${packagingRatingColor.r}, ${packagingRatingColor.g}, ${packagingRatingColor.b})`}} className={"text-center border " + styles["product-rating"]}>
+                        <Col style={{backgroundColor: calcRatingColor(product.packagingRating)}} className={"text-center border " + styles["product-rating"]}>
                             Packaging <br /><b style={{fontSize: "52px"}}>{ product.packagingRating }</b>
                         </Col>
                     </Row>

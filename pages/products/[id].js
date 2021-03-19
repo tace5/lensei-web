@@ -6,6 +6,7 @@ import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -23,14 +24,14 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.query;
     const product = await getProduct(id);
-    return { props: {} };
+    return { props: { product } };
 }
 
 export default function ViewProduct({ product }) {
     const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
 
     const onProductUpdate = data => {
-
+        
     }
 
     const breadCrumbs = [
