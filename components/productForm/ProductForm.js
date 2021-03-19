@@ -55,10 +55,6 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
         })
     }
 
-    const companyRatingColor = calcRatingColor(watch("companyRating"));
-    const packagingRatingColor = calcRatingColor(watch("packagingRating"));
-    const overallRatingColor = calcRatingColor(watch("overallRating"));
-
     return (
         <Form onSubmit={handleSubmit(onProductSubmit)}>
             <Row>

@@ -31,7 +31,7 @@ export default function ViewProduct({ product }) {
     const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
 
     const onProductUpdate = data => {
-        
+
     }
 
     const breadCrumbs = [

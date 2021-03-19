@@ -5,6 +5,7 @@ import {faAngleDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { calcRatingColor } from "../../helpers/colors.js";
 
 import styles from "./IngredientsListItem.module.css";
+import styles2 from "./IngredientsList.module.css";
 
 export default function IngredientsListItem({ ingredient, onRemove }) {
     const handleRemoveClick = (e) => {
@@ -21,7 +22,7 @@ export default function IngredientsListItem({ ingredient, onRemove }) {
                     <div className={styles["ingredients-list-item-info"]}>
                         <span className="mr-3 d-flex align-items-center">Rating:
                             <div
-                                className={"ml-2 border " + styles["ingredient-rating"]}
+                                className={"ml-2 border " + styles2["ingredient-rating"]}
                                 style={{backgroundColor: calcRatingColor(ingredient.rating)}}
                             >{ ingredient.rating }</div>
                         </span>
