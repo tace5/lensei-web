@@ -30,7 +30,7 @@ function AddProduct() {
     const router = useRouter();
 
     const onProductSubmit = ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
-        axios.post("/api/products/new", {
+        axios.post("/api/products", {
             name,
             price: parseFloat(price),
             barcodeFormat,

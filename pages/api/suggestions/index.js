@@ -1,54 +1,11 @@
-import {database} from "../../../firebase/db.js";
+import { getNextSuggestionsPage } from "../../../firebase/firestore/suggestions.js";
 
-export async function getNextSuggestionsPage(suggestionsPerPage, lastDocId) {
-    const productsRef = database.collection("suggestions");
-
-    let suggestionsDocs;
-    if (lastDocId === null) {
-        suggestionsDocs = await productsRef
-            .orderBy("dateCreated")
-            .limit(suggestionsPerPage)
-            .get()
-    } else {
-        const lastDoc = await productsRef.doc(lastDocId).get();
-        suggestionsDocs = await productsRef
-            .orderBy("dateCreated")
-            .startAfter(lastDoc)
-            .limit(suggestionsPerPage)
-            .get();
-    }
-
-    let suggestions = [];
-    suggestionsDocs.forEach(suggestionDoc => {
-        const { dateCreated, author, format, code } = suggestionDoc.data();
-
-        const suggestion = {
-            id: suggestionDoc.id,
-            author,
-            format,
-            code,
-            dateCreated: new Date(dateCreated._seconds * 1000).toUTCString()
-        }
-
-        suggestions.push(suggestion);
-    });
-
-    return Promise.all(suggestions.map(async suggestion => {
-        const usersRef = database.collection("users");
-        const userDoc = await usersRef.doc(suggestion.author).get();
-
-        return {
-            ...suggestion,
-            author: {
-                id: suggestion.author,
-                ...userDoc.data()
-            }
-        }
-    }));
-}
-
-export default function SuggestionsList(req, res) {
+export default function handle(req, res) {
     const { suggestionsPerPage, lastDocId } = req.body;
     getNextSuggestionsPage(suggestionsPerPage, lastDocId)
-        .then(nextSuggestionsPage => res.status(200).json(nextSuggestionsPage));
+        .then(nextSuggestionsPage => res.status(200).json(nextSuggestionsPage))
+        .catch(err => {
+            console.log(err);
+            res.status(500).end();
+        })
 }

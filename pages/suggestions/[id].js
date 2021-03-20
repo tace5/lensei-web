@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import nookies from "nookies";
 import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
 import { firebase } from "../../firebase/firebaseClient.js";
-import { getSuggestion } from "../api/suggestions/[id].js";
+import { getSuggestion } from "../../firebase/firestore/suggestions.js";
 import Layout from "../../components/layout/Layout.js";
 import ImageGallery from "../../components/imageGallery/ImageGallery.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
@@ -56,8 +56,7 @@ export default function ViewSuggestion({ suggestion }) {
     }, [])
 
     const onSuggestionApprove = ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
-        axios.post("/api/suggestions/approve", {
-            id: suggestion.id,
+        axios.post("/api/products", {
             name,
             price: parseFloat(price),
             barcodeFormat,
@@ -70,6 +69,7 @@ export default function ViewSuggestion({ suggestion }) {
             packagingRating: parseInt(packagingRating),
             overallRating: parseInt(overallRating)
         })
+            .then(() => axios.delete("/api/suggestions/" + suggestion.id))
             .then(() => {
                 router.push("/suggestions");
             })
@@ -79,7 +79,7 @@ export default function ViewSuggestion({ suggestion }) {
     }
 
     const onSuggestionReject = () => {
-        axios.post("/api/suggestions/delete", { id: suggestion.id })
+        axios.delete("/api/suggestions" + suggestion.id)
             .then(() => {
                 router.push("/suggestions");
             })

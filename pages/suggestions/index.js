@@ -6,7 +6,7 @@ import axios from "axios";
 import SuggestionsListItem from "../../components/suggestionsListItem/SuggestionsListItem.js";
 import nookies from "nookies";
 import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
-import { getNextSuggestionsPage } from "../api/suggestions";
+import { getNextSuggestionsPage } from "../../firebase/firestore/suggestions.js";
 import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
@@ -36,7 +36,13 @@ export default function SuggestionsList({ suggestions }) {
     const loadSuggestions = () => {
         const lastSuggestion = allSuggestions[allSuggestions.length - 1];
 
-        axios.post("/api/suggestions", { suggestionsPerPage: 10, lastDocId: lastSuggestion.id, orderBy: "dateCreated" })
+        const params = {
+            suggestionsPerPage: 10,
+            lastDocId: lastSuggestion.id,
+            orderBy: "dateCreated"
+        }
+
+        axios.get("/api/suggestions", { params })
             .then(res => {
                 const nextSuggestions = res.data;
 
