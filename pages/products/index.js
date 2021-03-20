@@ -92,7 +92,7 @@ export default function ProductsList({ products, initialSearchInput }) {
     return (
         <Layout title="Product List" breadcrumbs={breadCrumbs}>
             <InputGroup className="mb-3">
-                <FormControl onChange={handleSearch} type="text" placeholder="Search" />
+                <FormControl defaultValue={initialSearchInput} onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
                 className={allProducts.length !== 0 ? "border-top border-left border-right" : ""}
