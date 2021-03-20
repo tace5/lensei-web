@@ -6,9 +6,9 @@ import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import styles from "./ProductForm.module.css";
-import {calcRatingColor} from "../../helpers/rating.js";
+import { calcRatingColor } from "../../helpers/rating.js";
 
-export default function ProductForm({ onSubmit, errors, formData, submitBtnText, photoUrls }) {
+export default function ProductForm({ onSubmit, errors, formData, submitBtnText }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -33,7 +33,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
     });
 
     const loadIngredientsOptions = (searchInput, cb) =>
-        axios.post("/api/ingredients/search", { searchInput })
+        axios.get("/api/ingredients", { params: { searchInput } })
             .then(res => {
                 const matchingIngredients = res.data;
 
@@ -124,6 +124,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
                     <Form.Group className="mb-5" controlId="transportWeight">
                         <Form.Label>Transport Weight: <b>{ sliderVals.transportWeight }</b></Form.Label>
                         <Form.Control
+                            defaultValue={sliderVals.transportWeight}
                             name="transportWeight"
                             ref={ register }
                             type="range"
@@ -143,6 +144,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
                             >{ sliderVals.companyRating }</div>
                         </Form.Label>
                         <FormControl
+                            defaultValue={sliderVals.companyRating}
                             name="companyRating"
                             ref={ register }
                             type="range"
@@ -161,6 +163,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
                             >{ sliderVals.packagingRating }</div>
                         </Form.Label>
                         <FormControl
+                            defaultValue={sliderVals.packagingRating}
                             name="packagingRating"
                             ref={ register }
                             type="range"
@@ -179,6 +182,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText,
                             >{ sliderVals.overallRating }</div>
                         </Form.Label>
                         <FormControl
+                            defaultValue={sliderVals.overallRating}
                             name="overallRating"
                             ref={ register }
                             type="range"

@@ -1,28 +1,17 @@
-import {database} from "../../../firebase/db.js";
+import { deleteSuggestion } from "../../../firebase/firestore/suggestions.js";
 
-export async function getSuggestion(suggestionId) {
-    const suggestionsRef = database.collection("suggestions");
-    const suggestionDoc = await suggestionsRef.doc(suggestionId).get();
+export default function handle(req, res) {
+    const { id } = req.query;
 
-    const data = suggestionDoc.data();
+    switch (req.method) {
+        case "DELETE":
+            deleteSuggestion(id)
+                .then(() => res.status(200).end())
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).end();
+                })
 
-    const usersRef = database.collection("users");
-    const authorDoc = usersRef.doc(data.author);
-    const author = await authorDoc.get();
-
-    return {
-        ...data,
-        id: suggestionDoc.id,
-        author: {
-            ...author.data(),
-            id: authorDoc.id
-        },
-        dateCreated: new Date(data.dateCreated._seconds * 1000).toUTCString()
+            break;
     }
-}
-
-export default function handleSuggestion(req, res) {
-    const { id } = req.body;
-
-    getSuggestion(id).then(suggestion => res.status(200).json(suggestion));
 }

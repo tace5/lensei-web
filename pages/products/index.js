@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useState } from "react";
 import nookies from "nookies";
 import {firebaseAdmin} from "../../firebase/firebaseAdmin.js";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { InputGroup, FormControl, Spinner } from "react-bootstrap";
-import { getNextProductPage } from "../api/products";
+import { getNextProductPage } from "../../firebase/firestore/products.js";
 import Layout from "../../components/layout/Layout.js";
 import ProductListItem from "../../components/productListItem/ProductListItem.js";
 import {useRouter} from "next/router.js";
@@ -24,12 +24,13 @@ export const getServerSideProps = async (ctx) => {
         };
     }
 
-    let products;
-    if (ctx.query.searchInput) {
-        products = await getNextProductPage(10, null, "dateCreated", ctx.query.searchInput);
-        return { props: { products, initialSearchInput: ctx.query.searchInput } };
+    const searchInput = ctx.query.searchInput;
+    if (searchInput) {
+        const products = await getNextProductPage(10, null, "dateCreated", searchInput);
+        ctx.query = {};
+        return { props: { products, initialSearchInput: searchInput } };
     } else {
-        products = await getNextProductPage(10, null, "dateCreated");
+        const products = await getNextProductPage(10, null, "dateCreated");
         return { props: { products } };
     }
 };
@@ -44,7 +45,14 @@ export default function ProductsList({ products, initialSearchInput }) {
     const loadProducts = () => {
         const lastProduct = allProducts[allProducts.length - 1];
 
-        axios.post("/api/products", { productsPerPage: 10, lastDocId: lastProduct.id, orderBy: "dateCreated", searchInput })
+        const params = {
+            productsPerPage: 10,
+            lastDocId: lastProduct.id,
+            orderBy: "dateCreated",
+            searchInput
+        }
+
+        axios.get("/api/products", { params })
             .then(res => {
                 const nextProducts = res.data;
 
@@ -57,7 +65,7 @@ export default function ProductsList({ products, initialSearchInput }) {
     }
 
     const onProductDelete = productId => {
-        axios.post("/api/products/delete", { id: productId })
+        axios.delete("/api/products/" + productId)
             .then(() => {
                 const newProductsList = allProducts.filter(prod => {
                     return prod.id !== productId
@@ -73,7 +81,16 @@ export default function ProductsList({ products, initialSearchInput }) {
 
     const handleSearch = e => {
         setSearchInput(e.target.value);
-        axios.post("/api/products/search", { productsPerPage: 10, searchInput: e.target.value, orderBy: "dateCreated" })
+
+        const params = {
+            productsPerPage: 10,
+            orderBy: "dateCreated",
+            searchInput: e.target.value
+        }
+
+        console.log(params);
+
+        axios.get("/api/products", { params })
             .then(res => {
                 if (res.data.length === 0) {
                     setHasMoreProducts(false);

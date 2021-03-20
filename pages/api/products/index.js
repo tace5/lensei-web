@@ -1,52 +1,34 @@
-import { database } from "../../../firebase/db.js";
+import {createProduct, getNextProductPage, NAME_EXISTS_ERROR} from "../../../firebase/firestore/products.js";
 
-export async function getNextProductPage(productsPerPage, lastDocId, orderBy, searchInput = "") {
-    const productsRef = database.collection("products");
+export default function handle(req, res) {
+    switch (req.method) {
+        case "GET":
+            const { productsPerPage, lastDocId, orderBy, searchInput } = req.query;
 
-    let productDocs;
-    if (lastDocId === null) {
-        productDocs = await productsRef
-            .orderBy("name")
-            .orderBy(orderBy)
-            .startAt(searchInput)
-            .endAt(searchInput + "\uf8ff")
-            .limit(productsPerPage)
-            .get()
-    } else {
-        const lastDoc = await productsRef.doc(lastDocId).get();
-        productDocs = await productsRef
-            .orderBy("name")
-            .orderBy(orderBy)
-            .startAfter(lastDoc)
-            .limit(productsPerPage)
-            .get();
+            getNextProductPage(parseInt(productsPerPage), lastDocId, orderBy, searchInput)
+                .then(nextProductPage => res.status(200).json(nextProductPage))
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).end();
+                })
+
+            break;
+        case "POST":
+            createProduct(req.body)
+                .then(() => res.status(200).end())
+                .catch(err => {
+                    console.log(err);
+                    if (err.name === NAME_EXISTS_ERROR) {
+                        res.status(409).json({ name: err.message })
+                    } else {
+                        res.status(500).end();
+                    }
+                })
+
+            break;
+        default:
+            res.setHeader('Allow', ['GET', 'POST'])
+            res.status(405).end(`Method ${req.method} Not Allowed`)
+            break;
     }
-
-    let products = [];
-    productDocs.forEach(productDoc => {
-        const { label, name, ingredientsRating, companyRating, packagingRating, overallRating, price, likes, dislikes, dateCreated } = productDoc.data();
-        const product = {
-            id: productDoc.id,
-            name,
-            label,
-            ingredientsRating,
-            companyRating,
-            packagingRating,
-            overallRating,
-            price,
-            likes,
-            dislikes,
-            dateCreated: new Date(dateCreated._seconds * 1000).toUTCString()
-        }
-
-        products.push(product);
-    });
-
-    return products
-}
-
-export default function handleProducts(req, res) {
-    const { productsPerPage, lastDocId, orderBy } = req.body;
-    getNextProductPage(productsPerPage, lastDocId, orderBy)
-        .then(nextProductPage => res.status(200).json(nextProductPage))
 }

@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import nookies from "nookies";
-import {firebaseAdmin} from "../../firebase/firebaseAdmin.js";
-import {getProduct} from "../api/products/[id].js";
+import { firebaseAdmin } from "../../firebase/firebaseAdmin.js";
+import { getProduct } from "../../firebase/firestore/products.js";
 import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faThumbsDown, faThumbsUp} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import {useRouter} from "next/router.js";
+import { useRouter } from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -34,8 +34,7 @@ export default function ViewProduct({ product }) {
     const router = useRouter();
 
     const onProductUpdate = ({name, price, barcodeFormat, barcode, ingredientsList, locations, transportWeight, companyRating, packagingRating, overallRating}) => {
-        axios.post("/api/products/save", {
-            id: product.id,
+        axios.put("/api/products/" + product.id, {
             name,
             price: parseFloat(price),
             barcodeFormat,
