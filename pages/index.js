@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
@@ -9,7 +9,7 @@ import { Form, Button } from "react-bootstrap";
 import { useRouter } from "next/router.js";
 
 export default function Login() {
-    const { register, handleSubmit, setError, errors } = useForm();
+    const { register, handleSubmit, setError, formState: { errors } } = useForm();
     const router = useRouter();
 
     const handleLogin = ({ email, password }) => {
@@ -22,11 +22,14 @@ export default function Login() {
                 }
             })
             .catch(err => {
-                if (err.response && err.response.status === 401 || err.code) {
-                    setError("login", {
+                if ((err.response && err.response.status === 401) || err.code) {
+                    const loginError = {
                         type: "server",
                         message: "Wrong email or password"
-                    });
+                    };
+
+                    setError("email", loginError);
+                    setError("password", loginError);
                 }
             });
     }
@@ -42,7 +45,7 @@ export default function Login() {
             <Form onSubmit={handleSubmit(handleLogin)}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control ref={register} type="email" name="email" placeholder="Enter email" />
+                    <Form.Control ref={register} type="email" name="email" placeholder="Enter email" isInvalid={ errors.email } />
                     <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                     </Form.Text>
@@ -50,8 +53,8 @@ export default function Login() {
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control ref={register} type="password" name="password" placeholder="Password" />
-                    <Form.Control.Feedback type="invalid">oh no{ errors.login.message }</Form.Control.Feedback>
+                    <Form.Control ref={register} type="password" name="password" placeholder="Password" isInvalid={ errors.password } />
+                    { errors.password && <Form.Control.Feedback type="invalid">{ errors.password.message }</Form.Control.Feedback> }
                 </Form.Group>
                 <Form.Group controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Remember Me" />
