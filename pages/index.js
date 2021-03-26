@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
@@ -9,34 +9,25 @@ import { Form, Button } from "react-bootstrap";
 import { useRouter } from "next/router.js";
 
 export default function Login() {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, setError, errors } = useForm();
     const router = useRouter();
-
-    const checkIfAdmin = (idToken) => {
-        axios.post('/api/auth/login', { idToken })
-            .then(res => {
-                if (res.status === 200) {
-                    console.log("success")
-                    refreshToken().then(() => router.push("/products"));
-                } else if (res.status === 401) {
-                    console.log("You don't have permission for this page");
-                } else {
-                    console.log("Something went wrong...");
-                }
-            });
-    }
-
-
 
     const handleLogin = ({ email, password }) => {
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(() => {
-                refreshToken().then(idToken => {
-                    checkIfAdmin(idToken);
-                })
+            .then(() => refreshToken())
+            .then(idToken => axios.post('/api/auth/login', { idToken }))
+            .then(res => {
+                if (res.status === 200) {
+                    router.push("/products")
+                }
             })
             .catch(err => {
-                console.log(err.message)
+                if (err.response && err.response.status === 401 || err.code) {
+                    setError("login", {
+                        type: "server",
+                        message: "Wrong email or password"
+                    });
+                }
             });
     }
 
@@ -60,6 +51,7 @@ export default function Login() {
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control ref={register} type="password" name="password" placeholder="Password" />
+                    <Form.Control.Feedback type="invalid">oh no{ errors.login.message }</Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Remember Me" />

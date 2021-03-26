@@ -14,9 +14,10 @@ export default function handle(req, res) {
 
             break;
         case "POST":
-            const { ingredientName, rating, description } = req.body;
+            console.log(req.body);
+            const { name, rating, description } = req.body;
 
-            createIngredient(ingredientName, rating, description)
+            createIngredient(name, rating, description)
                 .then(newIngredient => res.status(200).json(newIngredient))
                 .catch(err => {
                     console.log(err);

@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import styles from "./ProductForm.module.css";
 import { calcRatingColor } from "../../helpers/rating.js";
 
-export default function ProductForm({ onSubmit, errors, formData, submitBtnText }) {
+export default function ProductForm({ onSubmit, formData, submitBtnText }) {
     const {
         ingredients,
         manufacturingLocation,
@@ -28,7 +28,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText 
         overallRating: formData.overallRating
     })
 
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit, setError, formState: { errors } } = useForm({
         defaultValues: otherFormData
     });
 
@@ -53,6 +53,16 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText 
             ingredientsList,
             locations
         })
+            .catch(err => {
+                const errors = err.response.data;
+
+                if (errors.name) {
+                    setError("name", {
+                        type: "server",
+                        message: errors.name
+                    });
+                }
+            });
     }
 
     return (
@@ -66,10 +76,9 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText 
                             placeholder="Product Name"
                             ref={ register }
                             name="name"
+                            isInvalid={ errors.name }
                         />
-                        <FormControl.Feedback type="invalid">
-                            { errors.name }
-                        </FormControl.Feedback>
+                        { errors.name && <FormControl.Feedback type="invalid">{ errors.name.message }</FormControl.Feedback> }
                     </Form.Group>
                 </Col>
                 <Col>
@@ -77,7 +86,7 @@ export default function ProductForm({ onSubmit, errors, formData, submitBtnText 
                         <Form.Label>Price:</Form.Label>
                         <Form.Control
                             type="number"
-                            step={0.01}
+                            step={ 0.01 }
                             placeholder="Product Price"
                             ref={ register }
                             name="price"

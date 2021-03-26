@@ -33,7 +33,7 @@ export async function createIngredient(name, rating, description) {
             ...newIngredient
         };
     } else {
-        const error = new Error("An ingredient With that name already exists");
+        const error = new Error("An ingredient with that name already exists");
         error.name = NAME_EXISTS_ERROR;
         throw error;
     }

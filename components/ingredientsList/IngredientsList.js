@@ -9,11 +9,10 @@ import axios from "axios";
 import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, setError, formState: { errors } } = useForm();
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [newIngredientRating, setNewIngredientRating] = useState(5);
-    const [newIngredientErrors, setNewIngredientErrors] = useState({ name: null })
 
     const handleSelect = ingredientOption => {
         updateIngredientsList([
@@ -31,12 +30,8 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
         updateIngredientsList(ingredientsList.filter(ingredient => ingredient.id !== ingredientId));
     }
 
-    const handleSubmitIngredient = ({ ingredientName, rating, description }) => {
-        const data = {
-            ingredientName,
-            rating: parseInt(rating),
-            description
-        }
+    const handleSubmitIngredient = ({ name, rating, description }) => {
+        const data = { name, rating: parseInt(rating), description };
 
         axios.post("/api/ingredients", data)
             .then(res => {
@@ -47,10 +42,17 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                     newIngredient
                 ])
 
-                reset({ ingredientName: "", rating: 5, description: ""});
+                reset({ name: "", rating: 5, description: ""});
             })
-            .catch(error => {
-                setNewIngredientErrors(error.response.data);
+            .catch(err => {
+                const errors = err.response.data;
+
+                if (errors.name) {
+                    setError("name", {
+                        type: "server",
+                        message: errors.name
+                    })
+                }
             });
     }
 
@@ -82,13 +84,11 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                         </InputGroup.Prepend>
                                         <FormControl
                                             ref={ register }
-                                            name="ingredientName"
+                                            name="name"
                                             placeholder="Ingredient Name"
-                                            isInvalid={ !!newIngredientErrors.name }
+                                            isInvalid={ errors.name }
                                         />
-                                        <FormControl.Feedback type="invalid">
-                                            { newIngredientErrors.name }
-                                        </FormControl.Feedback>
+                                        { errors.name && <FormControl.Feedback type="invalid">{ errors.name.message }</FormControl.Feedback> }
                                     </InputGroup>
                                 </Col>
                                 <Col>

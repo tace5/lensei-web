@@ -25,12 +25,10 @@ export const getServerSideProps = async (ctx) => {
 };
 
 function AddProduct() {
-    const [newProductErrors, setNewProductErrors] = useState({ name: null });
-
     const router = useRouter();
 
-    const onProductSubmit = ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
-        axios.post("/api/products", {
+    const onProductSubmit = async ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+        await axios.post("/api/products", {
             name,
             price: parseFloat(price),
             barcodeFormat,
@@ -45,10 +43,7 @@ function AddProduct() {
         })
             .then(() => {
                 router.push("/products")
-            })
-            .catch(errors => {
-                setNewProductErrors(errors.response.data);
-            })
+            });
     }
 
     const breadCrumbs = [
@@ -66,7 +61,6 @@ function AddProduct() {
         <Layout title="New Product" breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductSubmit}
-                errors={newProductErrors}
                 submitBtnText="Add Product"
                 type="add"
                 formData={{

@@ -33,30 +33,25 @@ export default function ViewSuggestion({ suggestion }) {
     const { author } = suggestion;
 
     const [suggestionImageUrls, setSuggestionImageUrls] = useState([]);
-    const [suggestionErrors, setSuggestionErrors] = useState({ name: null });
-    const [fetchingImgs, setFetchingImgs] = useState(true);
 
     const router = useRouter();
 
     useEffect(() => {
         const storageRef = firebase.storage().ref();
 
-        const getImgRef = async path => {
-            return await storageRef.child(path).getDownloadURL();
-        }
+        const getImgRef = async path =>
+            await storageRef.child(path).getDownloadURL();
+
         const getAllImgUrls = async () => {
             Promise.all(suggestion.photos.map(path => getImgRef(path)))
-                .then(urls => {
-                    setSuggestionImageUrls(urls);
-                    setFetchingImgs(false);
-                });
+                .then(urls => setSuggestionImageUrls(urls));
         }
 
         getAllImgUrls();
     }, [])
 
-    const onSuggestionApprove = ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
-        axios.post("/api/products", {
+    const onSuggestionApprove = async ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+        await axios.post("/api/products", {
             name,
             price: parseFloat(price),
             barcodeFormat,
@@ -72,19 +67,13 @@ export default function ViewSuggestion({ suggestion }) {
             .then(() => axios.delete("/api/suggestions/" + suggestion.id))
             .then(() => {
                 router.push("/suggestions");
-            })
-            .catch(errors => {
-                setSuggestionErrors(errors.response.data);
-            })
+            });
     }
 
     const onSuggestionReject = () => {
         axios.delete("/api/suggestions" + suggestion.id)
             .then(() => {
                 router.push("/suggestions");
-            })
-            .catch(errors => {
-                setSuggestionErrors(errors.response.data);
             })
     }
 
@@ -118,12 +107,11 @@ export default function ViewSuggestion({ suggestion }) {
             </div>
             <ProductForm
                 onSubmit={onSuggestionApprove}
-                errors={suggestionErrors}
                 submitBtnText="Add Suggestion"
                 type="add"
                 formData={{
                     name: null,
-                    price: suggestion.price,
+                    price: null,
                     ingredients: [],
                     barcodeFormat: suggestion.format,
                     barcode: suggestion.code,
