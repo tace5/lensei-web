@@ -42,27 +42,24 @@ export default function Login() {
 
             <h2 className="mb-4">Login</h2>
 
-            <Form onSubmit={handleSubmit(handleLogin)}>
-                <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control ref={register} type="email" name="email" placeholder="Enter email" isInvalid={ errors.email } />
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
-                </Form.Group>
+            <div className={styles.login}>
+                <Form className={styles["login-form"]} onSubmit={handleSubmit(handleLogin)}>
+                    <Form.Group controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control ref={register} type="email" name="email" placeholder="Enter email" isInvalid={ errors.email } />
+                    </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control ref={register} type="password" name="password" placeholder="Password" isInvalid={ errors.password } />
-                    { errors.password && <Form.Control.Feedback type="invalid">{ errors.password.message }</Form.Control.Feedback> }
-                </Form.Group>
-                <Form.Group controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Remember Me" />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control ref={register} type="password" name="password" placeholder="Password" isInvalid={ errors.password } />
+                        { errors.password && <Form.Control.Feedback type="invalid">{ errors.password.message }</Form.Control.Feedback> }
+                    </Form.Group>
+                    <Form.Group controlId="formBasicCheckbox">
+                        <Form.Check type="checkbox" label="Remember Me" />
+                    </Form.Group>
+                    <div className="mt-4 d-flex justify-content-center"><Button variant="primary" type="submit">Submit</Button></div>
+                </Form>
+            </div>
         </div>
     )
 }
