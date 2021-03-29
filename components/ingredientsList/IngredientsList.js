@@ -47,12 +47,12 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
             .catch(err => {
                 const errors = err.response.data;
 
-                if (errors.name) {
-                    setError("name", {
-                        type: "server",
-                        message: errors.name
+                errors.forEach(error => {
+                    setError(error.path, {
+                        type: error.type,
+                        message: error.message
                     })
-                }
+                })
             });
     }
 
@@ -119,7 +119,8 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                         <InputGroup.Prepend>
                                             <InputGroup.Text>Description:</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <FormControl as="textarea" ref={ register } name="description" />
+                                        <FormControl as="textarea" ref={ register } name="description" isInvalid={errors.description} />
+                                        { errors.description && <FormControl.Feedback type="invalid">{ errors.description.message }</FormControl.Feedback> }
                                     </InputGroup>
                                 </Col>
                             </Row>

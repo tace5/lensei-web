@@ -1,4 +1,4 @@
-import { searchIngredients, createIngredient, NAME_EXISTS_ERROR } from "../../firebase/firestore/ingredients.js";
+import {searchIngredients, createIngredient, ingredientSchema} from "../../firebase/firestore/ingredients.js";
 
 export default function handle(req, res) {
     switch (req.method) {
@@ -14,17 +14,17 @@ export default function handle(req, res) {
 
             break;
         case "POST":
-            console.log(req.body);
-            const { name, rating, description } = req.body;
+            const newIngredient = req.body;
 
-            createIngredient(name, rating, description)
+            ingredientSchema.validate(newIngredient, { abortEarly: false })
+                .then(() => createIngredient(newIngredient.name, newIngredient.rating, newIngredient.description))
                 .then(newIngredient => res.status(200).json(newIngredient))
                 .catch(err => {
-                    console.log(err);
-                    if (err.name === NAME_EXISTS_ERROR) {
-                        res.status(409).json({ name: err.message });
+                    if (err.name === "ValidationError") {
+                        res.status(400).json(err.inner);
                     } else {
-                        res.status(500).end()
+                        console.log(err);
+                        res.status(500).end();
                     }
                 })
 

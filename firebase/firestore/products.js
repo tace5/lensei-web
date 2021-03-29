@@ -8,7 +8,7 @@ import * as yup from 'yup';
 const productsRef = database.collection("products");
 
 export const productSchema = yup.object().shape({
-    name: yup.string().required().min(2)
+    name: yup.string().required().min(2).max(50)
         .test("name-taken", "There's already a product with that name", async name => {
             const productSnapshot = await productsRef
                 .where("name", "==", name.toLowerCase())
