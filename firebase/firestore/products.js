@@ -43,8 +43,12 @@ export const productSchema = yup.object().shape({
         }),
     transportWeight: yup.number().required().min(1).max(10),
     companyRating: yup.number().required().min(1).max(10),
+    companyName: yup.string().min(2).max(50),
+    companyRatingRationale: yup.string().max(500),
     packagingRating: yup.number().required().min(1).max(10),
-    overallRating: yup.number().required().min(1).max(10)
+    packagingRatingRationale: yup.string().max(500),
+    overallRating: yup.number().required().min(1).max(10),
+    overallRatingRationale: yup.string().max(500),
 });
 
 export async function getNextProductPage(productsPerPage, lastDocId, orderBy, searchInput = "") {
@@ -119,13 +123,34 @@ export async function getProduct(id) {
         },
         ingredientsRating: data.ingredientsRating,
         packagingRating: data.packagingRating,
+        packagingRatingRationale: data.packagingRatingRationale,
         transportWeight: data.transportWeight,
         overallRating: data.overallRating,
-        companyRating: data.companyRating
+        overallRatingRationale: data.overallRatingRationale,
+        companyRating: data.companyRating,
+        companyName: data.companyName,
+        companyRatingRationale: data.companyRatingRationale,
     };
 }
 
-export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+export function saveProduct(id, product) {
+    const {
+        name,
+        price,
+        barcodeFormat,
+        barcode, ingredientsList,
+        manufacturingLoc,
+        packagingLoc,
+        transportWeight,
+        companyRating,
+        companyName,
+        companyRatingRationale,
+        packagingRating,
+        packagingRatingRationale,
+        overallRating,
+        overallRatingRationale
+    } = product;
+
     const productDoc = productsRef.doc(id);
 
     const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
@@ -143,8 +168,12 @@ export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredien
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
         companyRating,
+        companyName,
+        companyRatingRationale,
         packagingRating,
-        overallRating
+        packagingRatingRationale,
+        overallRating,
+        overallRatingRationale
     });
 }
 
@@ -153,7 +182,25 @@ export function deleteProduct(id) {
     return productDoc.delete();
 }
 
-export async function createProduct({ name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+export async function createProduct(product) {
+    const {
+        name,
+        price,
+        barcodeFormat,
+        barcode,
+        ingredientsList,
+        manufacturingLoc,
+        packagingLoc,
+        transportWeight,
+        companyRating,
+        companyName,
+        companyRatingRationale,
+        packagingRating,
+        packagingRatingRationale,
+        overallRating,
+        overallRatingRationale
+    } = product;
+console.log(product)
     const newProductId = barcodeFormat + "-" + barcode;
     const newProductRef = productsRef.doc(newProductId);
 
@@ -174,8 +221,12 @@ export async function createProduct({ name, price, barcodeFormat, barcode, ingre
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
         companyRating,
+        companyName,
+        companyRatingRationale,
         packagingRating,
+        packagingRatingRationale,
         overallRating,
+        overallRatingRationale,
         dateCreated: firebaseAdmin.firestore.Timestamp.now()
     });
 }

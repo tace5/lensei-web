@@ -56,6 +56,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
             .catch(err => {
                 const errors = err.response.data;
                 errors.forEach(error => {
+                    console.log(error)
                     setError(error.path, {
                         type: error.type,
                         message: error.message
@@ -133,8 +134,6 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                         <Form.Label>Manufacturing & Packaging Locations:</Form.Label>
                         <Map locations={locations} setLocations={setLocations} errors={{ manufacturingLoc: errors.manufacturingLoc, packagingLoc: errors.packagingLoc }} />
                     </Form.Group>
-                </Col>
-                <Col>
                     <Form.Group className="mb-5" controlId="transportWeight">
                         <Form.Label>Transport Weight: <b>{ sliderVals.transportWeight }</b></Form.Label>
                         <Form.Control
@@ -148,6 +147,8 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                             onChange={e => setSliderVals({ ...sliderVals, transportWeight: e.target.value })}
                         />
                     </Form.Group>
+                </Col>
+                <Col>
                     <h3 className="mb-3">Ratings:</h3>
                     <Form.Group controlId="companyRating">
                         <Form.Label className="d-flex align-items-center">
@@ -167,13 +168,24 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                             step={1}
                             onChange={e => setSliderVals({ ...sliderVals, companyRating: e.target.value })}
                         />
+                        <Form.Control
+                            className="mt-3"
+                            type="text"
+                            placeholder="Company Name"
+                            ref={ register }
+                            name="companyName"
+                            isInvalid={ errors.companyName }
+                        />
+                        { errors.companyName && <FormControl.Feedback type="invalid">{ errors.companyName.message }</FormControl.Feedback> }
+                        <FormControl className="mt-3" placeholder="Explanation" as="textarea" ref={ register } name="companyRatingRationale" isInvalid={errors.companyRatingRationale} />
+                        { errors.companyRatingRationale && <FormControl.Feedback type="invalid">{ errors.companyRatingRationale.message }</FormControl.Feedback> }
                     </Form.Group>
                     <Form.Group controlId="packagingRating">
                         <Form.Label className="d-flex align-items-center">
                             Packaging:
                             <div
                                 className={"ml-2 border " + styles["rating"]}
-                                style={{backgroundColor: calcRatingColor(sliderVals.packagingRating)}}
+                                style={{ backgroundColor: calcRatingColor(sliderVals.packagingRating) }}
                             >{ sliderVals.packagingRating }</div>
                         </Form.Label>
                         <FormControl
@@ -186,6 +198,8 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                             step={1}
                             onChange={e => setSliderVals({ ...sliderVals, packagingRating: e.target.value })}
                         />
+                        <FormControl className="mt-3" placeholder="Explanation" as="textarea" ref={ register } name="packagingRatingRationale" isInvalid={errors.packagingRatingRationale} />
+                        { errors.packagingRatingRationale && <FormControl.Feedback type="invalid">{ errors.packagingRatingRationale.message }</FormControl.Feedback> }
                     </Form.Group>
                     <Form.Group controlId="overallRating">
                         <Form.Label className="d-flex align-items-center">
@@ -205,6 +219,8 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                             step={1}
                             onChange={e => setSliderVals({ ...sliderVals, overallRating: e.target.value })}
                         />
+                        <FormControl className="mt-3" placeholder="Explanation" as="textarea" ref={ register } name="overallRatingRationale" isInvalid={errors.overallRatingRationale} />
+                        { errors.overallRatingRationale && <FormControl.Feedback type="invalid">{ errors.overallRatingRationale.message }</FormControl.Feedback> }
                     </Form.Group>
                 </Col>
             </Row>

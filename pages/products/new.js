@@ -27,19 +27,26 @@ export const getServerSideProps = async (ctx) => {
 function AddProduct() {
     const router = useRouter();
 
-    const onProductSubmit = async ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+    const onProductSubmit = async (product) => {
+        const {
+            price,
+            locations,
+            transportWeight,
+            companyRating,
+            packagingRating,
+            overallRating,
+            ...data
+        } = product;
+
         await axios.post("/api/products", {
-            name,
             price: parseFloat(price),
-            barcodeFormat,
-            barcode,
-            ingredientsList,
             manufacturingLoc: locations.manufacturingLoc,
             packagingLoc: locations.packagingLoc,
             transportWeight: parseFloat(transportWeight),
             companyRating: parseInt(companyRating),
             packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating)
+            overallRating: parseInt(overallRating),
+            ...data
         })
             .then(() => {
                 router.push("/products")

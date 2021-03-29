@@ -33,19 +33,26 @@ export default function ViewProduct({ product }) {
 
     const router = useRouter();
 
-    const onProductUpdate = ({name, price, barcodeFormat, barcode, ingredientsList, locations, transportWeight, companyRating, packagingRating, overallRating}) => {
+    const onProductUpdate = (product) => {
+        const {
+            price,
+            locations,
+            transportWeight,
+            companyRating,
+            packagingRating,
+            overallRating,
+            ...data
+        } = product;
+
         axios.put("/api/products/" + product.id, {
-            name,
             price: parseFloat(price),
-            barcodeFormat,
-            barcode,
-            ingredientsList,
             manufacturingLoc: locations.manufacturingLoc,
             packagingLoc: locations.packagingLoc,
             transportWeight: parseFloat(transportWeight),
             companyRating: parseInt(companyRating),
             packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating)
+            overallRating: parseInt(overallRating),
+            ...data
         })
             .then(() => {
                 router.push("/products")
