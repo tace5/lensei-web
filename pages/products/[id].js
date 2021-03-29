@@ -29,11 +29,9 @@ export const getServerSideProps = async (ctx) => {
 }
 
 export default function ViewProduct({ product }) {
-    const [updateProductErrors, setUpdateProductErrors] = useState({ name: null });
-
     const router = useRouter();
 
-    const onProductUpdate = (product) => {
+    const onProductUpdate = async (formData) => {
         const {
             price,
             locations,
@@ -42,9 +40,9 @@ export default function ViewProduct({ product }) {
             packagingRating,
             overallRating,
             ...data
-        } = product;
+        } = formData;
 
-        axios.put("/api/products/" + product.id, {
+        await axios.put("/api/products/" + product.id, {
             price: parseFloat(price),
             manufacturingLoc: locations.manufacturingLoc,
             packagingLoc: locations.packagingLoc,
@@ -56,9 +54,6 @@ export default function ViewProduct({ product }) {
         })
             .then(() => {
                 router.push("/products")
-            })
-            .catch(errors => {
-                setUpdateProductErrors(errors.response.data);
             })
     }
 
@@ -100,7 +95,6 @@ export default function ViewProduct({ product }) {
         <Layout title={product.label} header={header} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
-                errors={updateProductErrors}
                 submitBtnText="Save Product"
                 type="update"
                 formData={{

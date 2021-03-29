@@ -55,8 +55,8 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
         })
             .catch(err => {
                 const errors = err.response.data;
+                console.log(errors);
                 errors.forEach(error => {
-                    console.log(error)
                     setError(error.path, {
                         type: error.type,
                         message: error.message

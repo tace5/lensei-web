@@ -27,7 +27,7 @@ export const getServerSideProps = async (ctx) => {
 function AddProduct() {
     const router = useRouter();
 
-    const onProductSubmit = async (product) => {
+    const onProductSubmit = async (formData) => {
         const {
             price,
             locations,
@@ -36,7 +36,7 @@ function AddProduct() {
             packagingRating,
             overallRating,
             ...data
-        } = product;
+        } = formData;
 
         await axios.post("/api/products", {
             price: parseFloat(price),

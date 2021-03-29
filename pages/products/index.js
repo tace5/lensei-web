@@ -88,8 +88,6 @@ export default function ProductsList({ products, initialSearchInput }) {
             searchInput: e.target.value
         }
 
-        console.log(params);
-
         axios.get("/api/products", { params })
             .then(res => {
                 if (res.data.length === 0) {
