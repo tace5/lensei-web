@@ -1,7 +1,18 @@
 import { database } from "../db.js";
+import * as yup from 'yup';
 
 const ingredientsRef = database.collection("ingredients");
-export const NAME_EXISTS_ERROR = "NameExistsError";
+
+export const ingredientSchema = yup.object().shape({
+    name: yup.string().required().min(2).max(50)
+        .test("name-taken", "There's already an ingredient with that name", async name => {
+            const existingIngredientSnapshot = await ingredientsRef.where("name", "==", name.toLowerCase()).get();
+
+            return existingIngredientSnapshot.empty;
+        }),
+    rating: yup.number().required().min(1).max(10),
+    description: yup.string().max(500)
+});
 
 async function getIngredient(ingredientId) {
     const ingredientDoc = await ingredientsRef.doc(ingredientId).get();
@@ -24,19 +35,12 @@ export async function createIngredient(name, rating, description) {
         description
     }
 
-    const existingIngredientDoc = await ingredientsRef.where("name", "==", newIngredient.name).get();
+    const newIngredientRef = await ingredientsRef.add(newIngredient);
 
-    if (existingIngredientDoc.empty) {
-        const newIngredientRef = await ingredientsRef.add(newIngredient);
-        return {
-            id: newIngredientRef.id,
-            ...newIngredient
-        };
-    } else {
-        const error = new Error("An ingredient With that name already exists");
-        error.name = NAME_EXISTS_ERROR;
-        throw error;
-    }
+    return {
+        id: newIngredientRef.id,
+        ...newIngredient
+    };
 }
 
 export async function searchIngredients(searchInput) {

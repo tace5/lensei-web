@@ -3,9 +3,49 @@ import * as firebaseAdmin from "firebase-admin";
 import { getDistance } from "../../helpers/distance.js";
 import { calculateIngredientsRating } from "../../helpers/rating.js";
 import { getIngredients } from "./ingredients.js";
+import * as yup from 'yup';
 
 const productsRef = database.collection("products");
-export const NAME_EXISTS_ERROR = "NameExistsError";
+
+export const productSchema = yup.object().shape({
+    name: yup.string().required().min(2).max(50)
+        .test("name-taken", "There's already a product with that name", async name => {
+            const productSnapshot = await productsRef
+                .where("name", "==", name.toLowerCase())
+                .get()
+
+            return productSnapshot.empty;
+        }),
+    price: yup.number().min(0),
+    barcodeFormat: yup.string().required(),
+    barcode: yup.string().required()
+        .test("barcode-taken", "There's already a product with that barcode", async (barcode, testCtx) => {
+            const productSnapshot = await productsRef
+                .where("code", "==", barcode)
+                .where("format", "==", testCtx.parent.barcodeFormat)
+                .get()
+
+            return productSnapshot.empty;
+        }),
+    manufacturingLoc: yup.object()
+        .typeError("Please specify the product's manufacturing location")
+        .required()
+        .shape({
+            lat: yup.number().required().min(-90).max(90),
+            lng: yup.number().required().min(-180).max(180)
+        }),
+    packagingLoc: yup.object()
+        .typeError("Please specify the product's packaging location")
+        .required()
+        .shape({
+            lat: yup.number().required().min(-90).max(90),
+            lng: yup.number().required().min(-180).max(180)
+        }),
+    transportWeight: yup.number().required().min(1).max(10),
+    companyRating: yup.number().required().min(1).max(10),
+    packagingRating: yup.number().required().min(1).max(10),
+    overallRating: yup.number().required().min(1).max(10)
+});
 
 export async function getNextProductPage(productsPerPage, lastDocId, orderBy, searchInput = "") {
     let productDocs;
@@ -49,7 +89,7 @@ export async function getNextProductPage(productsPerPage, lastDocId, orderBy, se
         products.push(product);
     });
 
-    return products
+    return products;
 }
 
 export async function getProduct(id) {
@@ -69,11 +109,11 @@ export async function getProduct(id) {
         likes: data.likes,
         ingredientsList,
         dateCreated: new Date(data.dateCreated._seconds * 1000).toUTCString(),
-        packagingLocation: {
+        packagingLoc: {
             lat: data.packagingLoc.latitude,
             lng: data.packagingLoc.longitude
         },
-        manufacturingLocation: {
+        manufacturingLoc: {
             lat: data.manufacturingLoc.latitude,
             lng: data.manufacturingLoc.longitude
         },
@@ -85,8 +125,8 @@ export async function getProduct(id) {
     };
 }
 
-export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredientsList, manufacturingLocation, packagingLocation, transportWeight, companyRating, packagingRating, overallRating }) {
-    const productDoc = productsRef.doc(id)
+export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+    const productDoc = productsRef.doc(id);
 
     const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
 
@@ -96,9 +136,9 @@ export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredien
         label: name,
         format: barcodeFormat,
         code: barcode,
-        manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLocation.lat, manufacturingLocation.lng),
-        packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
-        manufacturingDistance: Math.round(getDistance(manufacturingLocation, packagingLocation) * 100) / 100,
+        manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLoc.lat, manufacturingLoc.lng),
+        packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLoc.lat, packagingLoc.lng),
+        manufacturingDistance: Math.round(getDistance(manufacturingLoc, packagingLoc) * 100) / 100,
         transportWeight,
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
@@ -113,37 +153,29 @@ export function deleteProduct(id) {
     return productDoc.delete();
 }
 
-export async function createProduct({ name, price, barcodeFormat, barcode, ingredientsList, manufacturingLocation, packagingLocation, transportWeight, companyRating, packagingRating, overallRating }) {
-    const productExistsSnapShot = await productsRef.where("name", "==", name.toLowerCase()).get();
+export async function createProduct({ name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+    const newProductId = barcodeFormat + "-" + barcode;
+    const newProductRef = productsRef.doc(newProductId);
 
-    if (productExistsSnapShot.empty) {
-        const newProductId = barcodeFormat + "-" + barcode;
-        const newProductRef = productsRef.doc(newProductId);
+    const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
 
-        const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
-
-        return newProductRef.set({
-            name: name.toLowerCase(),
-            price,
-            likes: 0,
-            dislikes: 0,
-            label: name,
-            format: barcodeFormat,
-            code: barcode,
-            manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLocation.lat, manufacturingLocation.lng),
-            packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLocation.lat, packagingLocation.lng),
-            manufacturingDistance: Math.round(getDistance(manufacturingLocation, packagingLocation) * 100) / 100,
-            transportWeight,
-            ingredients: ingredientsIds,
-            ingredientsRating: calculateIngredientsRating(ingredientsList),
-            companyRating,
-            packagingRating,
-            overallRating,
-            dateCreated: firebaseAdmin.firestore.Timestamp.now()
-        })
-    } else {
-        const error = new Error("A product with that name already exists")
-        error.name = NAME_EXISTS_ERROR;
-        throw error;
-    }
+    return newProductRef.set({
+        name: name.toLowerCase(),
+        price,
+        likes: 0,
+        dislikes: 0,
+        label: name,
+        format: barcodeFormat,
+        code: barcode,
+        manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLoc.lat, manufacturingLoc.lng),
+        packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLoc.lat, packagingLoc.lng),
+        manufacturingDistance: Math.round(getDistance(manufacturingLoc, packagingLoc) * 100) / 100,
+        transportWeight,
+        ingredients: ingredientsIds,
+        ingredientsRating: calculateIngredientsRating(ingredientsList),
+        companyRating,
+        packagingRating,
+        overallRating,
+        dateCreated: firebaseAdmin.firestore.Timestamp.now()
+    });
 }

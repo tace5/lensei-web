@@ -24,6 +24,7 @@
     "react-hook-form": "^6.15.4",
     "react-infinite-scroll-component": "^6.0.0",
     "react-select": "^4.2.1",
-    "swr": "^0.5.3"
+    "swr": "^0.5.3",
+    "yup": "^0.32.9"
   }
 }

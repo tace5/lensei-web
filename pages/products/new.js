@@ -25,19 +25,17 @@ export const getServerSideProps = async (ctx) => {
 };
 
 function AddProduct() {
-    const [newProductErrors, setNewProductErrors] = useState({ name: null });
-
     const router = useRouter();
 
-    const onProductSubmit = ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
-        axios.post("/api/products", {
+    const onProductSubmit = async ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+        await axios.post("/api/products", {
             name,
             price: parseFloat(price),
             barcodeFormat,
             barcode,
             ingredientsList,
-            manufacturingLocation: locations.manufacturingLocation,
-            packagingLocation: locations.packagingLocation,
+            manufacturingLoc: locations.manufacturingLoc,
+            packagingLoc: locations.packagingLoc,
             transportWeight: parseFloat(transportWeight),
             companyRating: parseInt(companyRating),
             packagingRating: parseInt(packagingRating),
@@ -45,10 +43,7 @@ function AddProduct() {
         })
             .then(() => {
                 router.push("/products")
-            })
-            .catch(errors => {
-                setNewProductErrors(errors.response.data);
-            })
+            });
     }
 
     const breadCrumbs = [
@@ -66,7 +61,6 @@ function AddProduct() {
         <Layout title="New Product" breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductSubmit}
-                errors={newProductErrors}
                 submitBtnText="Add Product"
                 type="add"
                 formData={{
@@ -75,8 +69,8 @@ function AddProduct() {
                     ingredients: [],
                     barcodeFormat: "",
                     barcode: null,
-                    manufacturingLocation: null,
-                    packagingLocation: null,
+                    manufacturingLoc: null,
+                    packagingLoc: null,
                     transportWeight: 5,
                     companyRating: 5,
                     packagingRating: 5,

@@ -1,9 +1,9 @@
-import {createProduct, getNextProductPage, NAME_EXISTS_ERROR} from "../../../firebase/firestore/products.js";
+import { createProduct, getNextProductPage, productSchema } from "../../../firebase/firestore/products.js";
 
-export default function handle(req, res) {
+export default async function handle(req, res) {
     switch (req.method) {
         case "GET":
-            const { productsPerPage, lastDocId, orderBy, searchInput } = req.query;
+            const {productsPerPage, lastDocId, orderBy, searchInput} = req.query;
 
             getNextProductPage(parseInt(productsPerPage), lastDocId, orderBy, searchInput)
                 .then(nextProductPage => res.status(200).json(nextProductPage))
@@ -14,21 +14,24 @@ export default function handle(req, res) {
 
             break;
         case "POST":
-            createProduct(req.body)
+            const newProduct = req.body;
+
+            productSchema.validate(newProduct, { abortEarly: false })
+                .then(() => createProduct(newProduct))
                 .then(() => res.status(200).end())
                 .catch(err => {
-                    console.log(err);
-                    if (err.name === NAME_EXISTS_ERROR) {
-                        res.status(409).json({ name: err.message })
+                    if (err.name === "ValidationError") {
+                        res.status(400).json(err.inner);
                     } else {
+                        console.log(err);
                         res.status(500).end();
                     }
                 })
 
             break;
         default:
-            res.setHeader('Allow', ['GET', 'POST'])
-            res.status(405).end(`Method ${req.method} Not Allowed`)
+            res.setHeader('Allow', ['GET', 'POST']);
+            res.status(405).end(`Method ${req.method} Not Allowed`);
             break;
     }
 }

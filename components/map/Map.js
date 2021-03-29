@@ -1,8 +1,8 @@
 import React, {useRef, useState} from "react";
 import {GoogleMap, Marker, Polyline, useJsApiLoader} from "@react-google-maps/api";
-import {Spinner} from "react-bootstrap";
+import {FormControl, Spinner} from "react-bootstrap";
 
-export default function Map({ locations, setLocations }) {
+export default function Map({ locations, setLocations, errors }) {
     const [center, setCenter] = useState({lat: 0, lng: 0});
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyC3_D-3T8rx1pzDbpITpZmau9H-3vR1P9w"
@@ -15,15 +15,15 @@ export default function Map({ locations, setLocations }) {
             lng: latLng.lng()
         }
 
-        if (locations.manufacturingLocation === null || locations.packagingLocation !== null) {
+        if (locations.manufacturingLoc === null || locations.packagingLoc !== null) {
             setLocations({
-                manufacturingLocation: location,
-                packagingLocation: null
+                manufacturingLoc: location,
+                packagingLoc: null
             })
         } else {
             setLocations({
                 ...locations,
-                packagingLocation: location
+                packagingLoc: location
             })
         }
     }
@@ -47,35 +47,41 @@ export default function Map({ locations, setLocations }) {
         }
     }
 
+    const borderDanger = errors.manufacturingLoc || errors.packagingLoc ? "border-danger" : "";
+
     if (isLoaded) {
         return (
-            <div className="border">
-                <GoogleMap
-                    ref={mapRef}
-                    mapContainerStyle={{
-                        width: '100%',
-                        height: '400px'
-                    }}
-                    center={center}
-                    zoom={2}
-                    onCenterChanged={onCenterChanged}
-                    onClick={handleClick}
-                    options={options}
-                >
-                    {locations.manufacturingLocation !== null
-                        ? <Marker label="Manufacturing" draggable position={locations.manufacturingLocation}/> : ""}
-                    {locations.packagingLocation !== null
-                        ? <Marker label="Packaging" draggable position={locations.packagingLocation}/> : ""}
-                    {locations.packagingLocation !== null
-                        ? <Polyline
-                            geodesic={true}
-                            path={[locations.manufacturingLocation, locations.packagingLocation]}
-                            options={{
-                                strokeColor: "#007bff"
-                            }}
+            <div>
+                <div className={`border ${borderDanger}`}>
+                    <GoogleMap
+                        ref={mapRef}
+                        mapContainerStyle={{
+                            width: '100%',
+                            height: '400px'
+                        }}
+                        center={center}
+                        zoom={2}
+                        onCenterChanged={onCenterChanged}
+                        onClick={handleClick}
+                        options={options}
+                    >
+                        {locations.manufacturingLoc !== null
+                            ? <Marker label="Manufacturing" draggable position={locations.manufacturingLoc}/> : ""}
+                        {locations.packagingLoc !== null
+                            ? <Marker label="Packaging" draggable position={locations.packagingLoc}/> : ""}
+                        {locations.packagingLoc !== null
+                            ? <Polyline
+                                geodesic={true}
+                                path={[locations.manufacturingLoc, locations.packagingLoc]}
+                                options={{
+                                    strokeColor: "#007bff"
+                                }}
 
-                        /> : ""}
-                </GoogleMap>
+                            /> : ""}
+                    </GoogleMap>
+                </div>
+                { errors.manufacturingLoc && <FormControl.Feedback style={{ display: "block" }} type="invalid">{ errors.manufacturingLoc.message }</FormControl.Feedback> }
+                { errors.packagingLoc && <FormControl.Feedback style={{ display: "block" }} type="invalid">{ errors.packagingLoc.message }</FormControl.Feedback> }
             </div>
         )
     }
