@@ -1,8 +1,8 @@
-import {Button, Col, Form, FormControl, InputGroup, Row} from "react-bootstrap";
-import barcodeFormats from "../../public/barcodeFormats.json";
+import React, { useState } from "react";
+import { Button, Col, Form, FormControl, InputGroup, Row } from "react-bootstrap";
+import barcodeFormats from "../../public/barcode_formats.json";
 import IngredientsList from "../ingredientsList/IngredientsList.js";
 import Map from "../map/Map.js";
-import React, {useState} from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import styles from "./ProductForm.module.css";
@@ -11,15 +11,15 @@ import { calcRatingColor } from "../../helpers/rating.js";
 export default function ProductForm({ onSubmit, formData, submitBtnText }) {
     const {
         ingredients,
-        manufacturingLocation,
-        packagingLocation,
+        manufacturingLoc,
+        packagingLoc,
         ...otherFormData
     } = formData;
 
     const [ingredientsList, setIngredientsList] = useState(ingredients);
     const [locations, setLocations] = useState({
-        manufacturingLocation,
-        packagingLocation
+        manufacturingLoc,
+        packagingLoc
     })
     const [sliderVals, setSliderVals] = useState({
         transportWeight: formData.transportWeight,
@@ -55,13 +55,13 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
         })
             .catch(err => {
                 const errors = err.response.data;
-
-                if (errors.name) {
-                    setError("name", {
-                        type: "server",
-                        message: errors.name
-                    });
-                }
+                errors.forEach(error => {
+                    console.log(error);
+                    setError(error.path, {
+                        type: error.type,
+                        message: error.message
+                    })
+                })
             });
     }
 
@@ -86,11 +86,13 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                         <Form.Label>Price:</Form.Label>
                         <Form.Control
                             type="number"
-                            step={ 0.01 }
+                            step={0.01}
                             placeholder="Product Price"
                             ref={ register }
                             name="price"
+                            isInvalid={ errors.price }
                         />
+                        { errors.price && <FormControl.Feedback type="invalid">{ errors.price.message }</FormControl.Feedback> }
                     </Form.Group>
                 </Col>
             </Row>
@@ -100,6 +102,8 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                     as="select"
                     ref={ register }
                     name="barcodeFormat"
+                    isInvalid={ errors.barcode }
+                    style={{ backgroundImage: "none" }}
                 >
                     <option value="" disabled hidden>Format</option>
                     { barcodeFormats.map(format => <option key={ format.id } value={ format.id }>{ format.name }</option>) }
@@ -111,7 +115,9 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                     name="barcode"
                     aria-describedby="basic-addon1"
                     placeholder="Barcode"
+                    isInvalid={ errors.barcode }
                 />
+                { errors.barcode && <FormControl.Feedback type="invalid">{ errors.barcode.message }</FormControl.Feedback> }
             </InputGroup>
             <Form.Group controlId="ingredientsList">
                 <Form.Label>Ingredients:</Form.Label>
@@ -126,7 +132,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                 <Col>
                     <Form.Group controlId="manufacAndPackagingLoc">
                         <Form.Label>Manufacturing & Packaging Locations:</Form.Label>
-                        <Map locations={locations} setLocations={setLocations} />
+                        <Map locations={locations} setLocations={setLocations} errors={{ manufacturingLoc: errors.manufacturingLoc, packagingLoc: errors.packagingLoc }} />
                     </Form.Group>
                 </Col>
                 <Col>

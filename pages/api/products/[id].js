@@ -1,4 +1,4 @@
-import { deleteProduct, getProduct, saveProduct } from "../../../firebase/firestore/products.js";
+import { deleteProduct, getProduct, saveProduct, productSchema } from "../../../firebase/firestore/products.js";
 
 export default function handle(req, res) {
     const { id } = req.query;
@@ -7,28 +7,29 @@ export default function handle(req, res) {
         case "GET":
             getProduct(id)
                 .then(product => res.status(200).json(product))
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).end("Failed to fetch product wi");
-                })
+                .catch(() => res.status(500).end());
 
             break;
         case "PUT":
-            saveProduct(id, req.body)
+            const updatedProduct = req.body;
+
+            productSchema.validate(updatedProduct, { abortEarly: false })
+                .then(() => saveProduct(id, updatedProduct))
                 .then(() => res.status(200).end())
                 .catch(err => {
-                    console.log(err);
-                    res.status(500).end();
-                })
+                    if (err.name === "ValidationError") {
+                        console.log(err);
+                        res.status(400).json(err.inner);
+                    } else {
+                        res.status(500).end();
+                    }
+                });
 
             break;
         case "DELETE":
             deleteProduct(id)
                 .then(() => res.status(200).end())
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).end();
-                })
+                .catch(() => res.status(500).end());
 
             break;
         default:
