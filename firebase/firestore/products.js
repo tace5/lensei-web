@@ -9,11 +9,15 @@ const productsRef = database.collection("products");
 
 export const productSchema = yup.object().shape({
     name: yup.string().required().min(2).max(50)
-        .test("name-taken", "There's already a product with that name", async name => {
+        .test("name-taken", "There's already a product with that name", async (name, testCtx) => {
             const productSnapshot = await productsRef
                 .where("name", "==", name.toLowerCase())
-                .get()
+                .limit(1)
+                .get();
 
+            if (testCtx.options.updateProduct && productSnapshot.docs[0]) {
+                return testCtx.options.id === productSnapshot.docs[0].id;
+            }
             return productSnapshot.empty;
         }),
     price: yup.number().min(0),
@@ -23,8 +27,12 @@ export const productSchema = yup.object().shape({
             const productSnapshot = await productsRef
                 .where("code", "==", barcode)
                 .where("format", "==", testCtx.parent.barcodeFormat)
-                .get()
+                .limit(1)
+                .get();
 
+            if (testCtx.options.updateProduct && productSnapshot.docs[0]) {
+                return testCtx.options.id === productSnapshot.docs[0].id;
+            }
             return productSnapshot.empty;
         }),
     manufacturingLoc: yup.object()
@@ -43,8 +51,12 @@ export const productSchema = yup.object().shape({
         }),
     transportWeight: yup.number().required().min(1).max(10),
     companyRating: yup.number().required().min(1).max(10),
+    companyName: yup.string().min(2).max(50),
+    companyRatingRationale: yup.string().max(500),
     packagingRating: yup.number().required().min(1).max(10),
-    overallRating: yup.number().required().min(1).max(10)
+    packagingRatingRationale: yup.string().max(500),
+    overallRating: yup.number().required().min(1).max(10),
+    overallRatingRationale: yup.string().max(500),
 });
 
 export async function getNextProductPage(productsPerPage, lastDocId, orderBy, searchInput = "") {
@@ -94,57 +106,63 @@ export async function getNextProductPage(productsPerPage, lastDocId, orderBy, se
 
 export async function getProduct(id) {
     const productDoc = await productsRef.doc(id).get();
-    const data = productDoc.data();
+    const {
+        label,
+        format,
+        code,
+        dateCreated,
+        packagingLoc,
+        manufacturingLoc,
+        ingredients,
+        ...data
+    } = productDoc.data();
 
-    const ingredientsList = await getIngredients(data.ingredients);
+    const ingredientsList = await getIngredients(ingredients);
 
     return {
         id: productDoc.id,
-        name: data.label,
-        barcodeFormat: data.format,
-        barcode: data.code,
-        price: data.price,
-        label: data.label,
-        dislikes: data.dislikes,
-        likes: data.likes,
+        name: label,
+        barcodeFormat: format,
+        barcode: code,
         ingredientsList,
-        dateCreated: new Date(data.dateCreated._seconds * 1000).toUTCString(),
+        dateCreated: new Date(dateCreated._seconds * 1000).toUTCString(),
         packagingLoc: {
-            lat: data.packagingLoc.latitude,
-            lng: data.packagingLoc.longitude
+            lat: packagingLoc.latitude,
+            lng: packagingLoc.longitude
         },
         manufacturingLoc: {
-            lat: data.manufacturingLoc.latitude,
-            lng: data.manufacturingLoc.longitude
+            lat: manufacturingLoc.latitude,
+            lng: manufacturingLoc.longitude
         },
-        ingredientsRating: data.ingredientsRating,
-        packagingRating: data.packagingRating,
-        transportWeight: data.transportWeight,
-        overallRating: data.overallRating,
-        companyRating: data.companyRating
+        ...data
     };
 }
 
-export function saveProduct(id, { name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+export function saveProduct(id, product) {
+    const {
+        name,
+        barcodeFormat,
+        barcode, ingredientsList,
+        manufacturingLoc,
+        packagingLoc,
+        ...date
+    } = product;
+
     const productDoc = productsRef.doc(id);
 
     const ingredientsIds = ingredientsList.map(ingredient => ingredient.id);
 
     return productDoc.update({
         name: name.toLowerCase(),
-        price,
         label: name,
         format: barcodeFormat,
         code: barcode,
         manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLoc.lat, manufacturingLoc.lng),
         packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLoc.lat, packagingLoc.lng),
         manufacturingDistance: Math.round(getDistance(manufacturingLoc, packagingLoc) * 100) / 100,
-        transportWeight,
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
-        companyRating,
-        packagingRating,
-        overallRating
+        ...date
     });
 }
 
@@ -153,7 +171,17 @@ export function deleteProduct(id) {
     return productDoc.delete();
 }
 
-export async function createProduct({ name, price, barcodeFormat, barcode, ingredientsList, manufacturingLoc, packagingLoc, transportWeight, companyRating, packagingRating, overallRating }) {
+export async function createProduct(product) {
+    const {
+        name,
+        barcodeFormat,
+        barcode,
+        ingredientsList,
+        manufacturingLoc,
+        packagingLoc,
+        ...date
+    } = product;
+
     const newProductId = barcodeFormat + "-" + barcode;
     const newProductRef = productsRef.doc(newProductId);
 
@@ -161,7 +189,6 @@ export async function createProduct({ name, price, barcodeFormat, barcode, ingre
 
     return newProductRef.set({
         name: name.toLowerCase(),
-        price,
         likes: 0,
         dislikes: 0,
         label: name,
@@ -170,12 +197,9 @@ export async function createProduct({ name, price, barcodeFormat, barcode, ingre
         manufacturingLoc: new firebaseAdmin.firestore.GeoPoint(manufacturingLoc.lat, manufacturingLoc.lng),
         packagingLoc: new firebaseAdmin.firestore.GeoPoint(packagingLoc.lat, packagingLoc.lng),
         manufacturingDistance: Math.round(getDistance(manufacturingLoc, packagingLoc) * 100) / 100,
-        transportWeight,
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
-        companyRating,
-        packagingRating,
-        overallRating,
-        dateCreated: firebaseAdmin.firestore.Timestamp.now()
+        dateCreated: firebaseAdmin.firestore.Timestamp.now(),
+        ...date
     });
 }
