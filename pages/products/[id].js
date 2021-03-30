@@ -66,33 +66,32 @@ export default function ViewProduct({ product }) {
             href: "/products/" + product.id,
             name: "View Product"
         }
-    ]
+    ];
 
     const header = (
         <h2 className="mb-4">
             <div>
-                { product.label }
+                { product.name }
                 <div style={{float: "right"}}>
-                    <span className="font-weight-bold mr-3" style={{color: "green", fontSize: "24px"}}>{ product.likes }</span>
+                    <span className="font-weight-bold mr-3 color-good" style={{fontSize: "24px"}}>{ product.likes }</span>
                     <FontAwesomeIcon
-                        className="mr-4"
-                        style={{color: "green"}}
-                        size="1x"
+                        className="mr-4 color-good"
+                        size="xs"
                         icon={faThumbsUp}
                         flip="horizontal" />
                     <FontAwesomeIcon
-                        style={{color: "red"}}
-                        size="1x"
+                        className="color-poor"
+                        size="xs"
                         icon={faThumbsDown}
                     />
-                    <span className="font-weight-bold ml-3" style={{color: "red", fontSize: "24px"}}>{ product.dislikes }</span>
+                    <span className="font-weight-bold ml-3 color-poor" style={{fontSize: "24px"}}>{ product.dislikes }</span>
                 </div>
             </div>
         </h2>
     )
 
     return (
-        <Layout title={product.label} header={header} breadcrumbs={breadCrumbs}>
+        <Layout title={product.name} header={header} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
                 submitBtnText="SAVE PRODUCT"

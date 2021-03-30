@@ -92,6 +92,14 @@ button {
     background-color: $good;
 }
 
+.color-good {
+    color: $good;
+}
+
+.color-poor {
+    color: $poor;
+}
+
 [type=range] {
     -webkit-appearance: none;
     background: transparent;

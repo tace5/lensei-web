@@ -120,6 +120,7 @@ export async function getProduct(id) {
     const ingredientsList = await getIngredients(ingredients);
 
     return {
+        ...data,
         id: productDoc.id,
         name: label,
         barcodeFormat: format,
@@ -133,8 +134,7 @@ export async function getProduct(id) {
         manufacturingLoc: {
             lat: manufacturingLoc.latitude,
             lng: manufacturingLoc.longitude
-        },
-        ...data
+        }
     };
 }
 
