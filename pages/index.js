@@ -39,28 +39,32 @@ export default function Login() {
     return (
         <div className={styles.container}>
             <Head>
-                <title>Snapshop - Admin Login</title>
+                <title>Lensei - Admin Portal</title>
             </Head>
 
-            <h2 className="mb-4">Login</h2>
+            <img style={{ width: 200 }} className="mb-5 mt-5" src="/logo-white.svg" />
 
-            <div className={styles.login}>
-                <Form className={styles["login-form"]} onSubmit={handleSubmit(handleLogin)}>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control ref={ register } type="email" name="email" placeholder="Enter email" isInvalid={ errors.email } />
-                    </Form.Group>
+            <div className={styles["login-wrapper"]}>
+                <h2 className="mb-4">Sign In</h2>
 
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={ register } type="password" name="password" placeholder="Password" isInvalid={ errors.password } />
-                        { errors.password && <Form.Control.Feedback type="invalid">{ errors.password.message }</Form.Control.Feedback> }
-                    </Form.Group>
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check ref={ register } type="checkbox" name="remember" label="Remember Me" />
-                    </Form.Group>
-                    <div className="mt-4 d-flex justify-content-center"><Button variant="primary" type="submit">Submit</Button></div>
-                </Form>
+                <div className={styles.login}>
+                    <Form className={styles["login-form"]} onSubmit={handleSubmit(handleLogin)}>
+                        <Form.Group controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control ref={ register } type="email" name="email" placeholder="Enter email" isInvalid={ errors.email } />
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control ref={ register } type="password" name="password" placeholder="Password" isInvalid={ errors.password } />
+                            { errors.password && <Form.Control.Feedback type="invalid">{ errors.password.message }</Form.Control.Feedback> }
+                        </Form.Group>
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check ref={ register } type="checkbox" name="remember" label="Remember Me" />
+                        </Form.Group>
+                        <div className="mt-4 d-flex justify-content-center"><Button variant="primary" type="submit">Submit</Button></div>
+                    </Form>
+                </div>
             </div>
         </div>
     )

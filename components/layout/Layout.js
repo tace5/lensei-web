@@ -12,7 +12,7 @@ export default function Layout({ title, header, breadcrumbs, children }) {
     return (
         <div className="bg-secondary">
             <Head>
-                <title>Snapshop - { title }</title>
+                <title>Lensei - { title }</title>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
