@@ -24,7 +24,7 @@ export const getServerSideProps = async (ctx) => {
     }
 
     const suggestions = await getNextSuggestionsPage(10, null);
-    return { props: { suggestions } }
+    return { props: { suggestions } };
 }
 
 export default function SuggestionsList({ suggestions }) {
@@ -40,9 +40,9 @@ export default function SuggestionsList({ suggestions }) {
             suggestionsPerPage: 10,
             lastDocId: lastSuggestion.id,
             orderBy: "dateCreated"
-        }
+        };
 
-        axios.get("/api/suggestions", { params })
+        axios.post("/api/suggestions", params)
             .then(res => {
                 const nextSuggestions = res.data;
 
@@ -51,7 +51,7 @@ export default function SuggestionsList({ suggestions }) {
                 } else {
                     setAllSuggestions(allSuggestions.concat(nextSuggestions));
                 }
-            })
+            });
     }
 
     const onOpenClick = suggestionId => {
@@ -63,7 +63,7 @@ export default function SuggestionsList({ suggestions }) {
             href: "/suggestions",
             name: "Suggestions"
         }
-    ]
+    ];
 
     return (
         <Layout title="Product Suggestions" breadcrumbs={breadCrumbs}>
@@ -83,5 +83,5 @@ export default function SuggestionsList({ suggestions }) {
                 }
             </InfiniteScroll>
         </Layout>
-    )
+    );
 }

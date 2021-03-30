@@ -1,5 +1,5 @@
 import { Button, Card } from "react-bootstrap";
-import styles from "./SuggestionsListItem.module.css";
+import styles from "./SuggestionsListItem.module.scss";
 import React from "react";
 
 export default function SuggestionsListItem({ onViewClick, suggestion }) {

@@ -4,7 +4,7 @@ import AsyncSelect from 'react-select/async'
 import IngredientsListItem from "./IngredientsListItem.js";
 import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from "react-bootstrap";
 
-import styles from "./IngredientsList.module.css";
+import styles from "./IngredientsList.module.scss";
 import axios from "axios";
 import {calcRatingColor} from "../../helpers/rating.js";
 
@@ -71,7 +71,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                             onChange={ handleSelect }
                         />
                     </div>
-                    <Accordion.Toggle as={Button} eventKey="new-ingredient">New Ingredient</Accordion.Toggle>
+                    <Accordion.Toggle as={Button} eventKey="new-ingredient">NEW INGREDIENT</Accordion.Toggle>
                 </div>
                 <div className={ styles["new-ingredient-container"] }>
                     <Accordion.Collapse eventKey="new-ingredient">
@@ -95,10 +95,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                     <InputGroup>
                                         <FormLabel className="d-flex align-items-center">
                                             Rating:
-                                            <div
-                                                className={"ml-2 border " + styles["ingredient-rating"]}
-                                                style={{backgroundColor: calcRatingColor(newIngredientRating)}}
-                                            >{ newIngredientRating }</div>
+                                            <div className={calcRatingColor(newIngredientRating) + " ml-2 border " + styles["ingredient-rating"]}>{ newIngredientRating }</div>
                                         </FormLabel>
                                         <FormControl
                                             name="rating"
@@ -125,7 +122,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                 </Col>
                             </Row>
                             <div className={ styles["new-ingredient-form-btn-container"] }>
-                                <Button onClick={ handleSubmit(handleSubmitIngredient) }>Submit</Button>
+                                <Button onClick={ handleSubmit(handleSubmitIngredient) }>SUBMIT</Button>
                             </div>
                         </div>
                     </Accordion.Collapse>

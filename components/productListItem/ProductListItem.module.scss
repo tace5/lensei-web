@@ -1,4 +1,6 @@
 
+@import "../../styles/_variables.scss";
+
 .product-list-item-header {
     cursor: pointer;
     display: flex;
@@ -27,7 +29,6 @@
     border-radius: 15px;
     text-align: center;
     color: white;
-    text-shadow: 1px 1px 2px lightgray;
 }
 
 .product-rating {
@@ -38,5 +39,32 @@
     padding: 30px 20px 20px;
     flex-basis: auto;
     flex-grow: 0;
-    text-shadow: 1px 1px 2px lightgray;
+}
+
+.likes {
+    color: $good;
+    font-size: 18px;
+}
+
+.likes-icon {
+    color: $good;
+}
+
+.dislikes {
+    color: $poor;
+    font-size: 18px;
+}
+
+.dislikes-icon {
+    color: $poor;
+}
+
+.btn-edit {
+    width: 40px;
+    color: $primary;
+}
+
+.btn-remove {
+    width: 40px;
+    color: $danger;
 }

@@ -2,7 +2,7 @@ import React from "react";
 import Head from 'next/head';
 import Navigation from "./Navigation.js";
 
-import styles from "./Layout.module.css";
+import styles from "./Layout.module.scss";
 import { Breadcrumb, BreadcrumbItem} from "react-bootstrap";
 import { useAuth } from "../../firebase/auth.js";
 
@@ -10,9 +10,9 @@ export default function Layout({ title, header, breadcrumbs, children }) {
     const { user } = useAuth();
 
     return (
-        <div>
+        <div className="bg-secondary">
             <Head>
-                <title>Snapshop - { title }</title>
+                <title>Lensei - { title }</title>
                 <meta charSet="utf-8" />
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>

@@ -68,7 +68,7 @@ function AddProduct() {
         <Layout title="New Product" breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductSubmit}
-                submitBtnText="Add Product"
+                submitBtnText="ADD PRODUCT"
                 type="add"
                 formData={{
                     name: null,

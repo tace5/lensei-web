@@ -15,10 +15,6 @@ if (typeof window !== "undefined" && !firebase.apps.length) {
         appId: "1:393961054342:web:ad21341a754afa3f8bb107",
         measurementId: "G-SFWGBNN3T7"
     });
-
-    firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.SESSION);
 }
 
 export { firebase };

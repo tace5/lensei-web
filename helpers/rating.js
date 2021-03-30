@@ -10,12 +10,11 @@ export function calculateIngredientsRating(ingredientsList) {
 }
 
 export function calcRatingColor(rating) {
-    const percent = rating / 10;
-    const start = 0; // red
-    const end = 120;
-    const a = (end - start) * percent;
-    const b = a + start;
-
-    // Return a CSS HSL string
-    return 'hsl('+b+', 100%, 45%)';
+    if (rating < 4) {
+        return "poor";
+    } else if (rating >=4 && rating < 8) {
+        return "average";
+    } else {
+        return "good";
+    }
 }
