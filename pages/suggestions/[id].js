@@ -71,7 +71,7 @@ export default function ViewSuggestion({ suggestion }) {
     }
 
     const onSuggestionReject = () => {
-        axios.delete("/api/suggestions" + suggestion.id)
+        axios.delete("/api/suggestions/" + suggestion.id)
             .then(() => {
                 router.push("/suggestions");
             })
