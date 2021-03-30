@@ -179,7 +179,7 @@ export async function createProduct(product) {
         ingredientsList,
         manufacturingLoc,
         packagingLoc,
-        ...date
+        ...data
     } = product;
 
     const newProductId = barcodeFormat + "-" + barcode;
@@ -200,6 +200,6 @@ export async function createProduct(product) {
         ingredients: ingredientsIds,
         ingredientsRating: calculateIngredientsRating(ingredientsList),
         dateCreated: firebaseAdmin.firestore.Timestamp.now(),
-        ...date
+        ...data
     });
 }

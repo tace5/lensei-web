@@ -50,19 +50,16 @@ export default function ViewSuggestion({ suggestion }) {
         getAllImgUrls();
     }, [])
 
-    const onSuggestionApprove = async ({ name, price, ingredientsList, locations, barcodeFormat, barcode, transportWeight, companyRating, packagingRating, overallRating }) => {
+    const onSuggestionApprove = async ({ price, locations, transportWeight, companyRating, packagingRating, overallRating, ...data }) => {
         await axios.post("/api/products", {
-            name,
             price: parseFloat(price),
-            barcodeFormat,
-            barcode,
-            ingredientsList,
             manufacturingLoc: locations.manufacturingLoc,
             packagingLoc: locations.packagingLoc,
             transportWeight: parseFloat(transportWeight),
             companyRating: parseInt(companyRating),
             packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating)
+            overallRating: parseInt(overallRating),
+            ...data
         })
             .then(() => axios.delete("/api/suggestions/" + suggestion.id))
             .then(() => {
@@ -119,8 +116,12 @@ export default function ViewSuggestion({ suggestion }) {
                     packagingLoc: null,
                     transportWeight: 5,
                     companyRating: 5,
+                    companyName: "",
+                    companyRatingRationale: "",
                     packagingRating: 5,
-                    overallRating: 5
+                    packagingRatingRationale: "",
+                    overallRating: 5,
+                    overallRatingRationale: ""
                 }}
             />
         </Layout>

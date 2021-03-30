@@ -80,8 +80,12 @@ function AddProduct() {
                     packagingLoc: null,
                     transportWeight: 5,
                     companyRating: 5,
+                    companyName: "",
+                    companyRatingRationale: "",
                     packagingRating: 5,
-                    overallRating: 5
+                    packagingRatingRationale: "",
+                    overallRating: 5,
+                    overallRatingRationale: ""
                 }}
             />
         </Layout>

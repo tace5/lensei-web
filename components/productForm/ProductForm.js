@@ -28,7 +28,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
         overallRating: formData.overallRating
     })
 
-    const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    const { register, handleSubmit, setError, formState: { errors }, clearErrors } = useForm({
         defaultValues: otherFormData
     });
 
@@ -48,6 +48,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
             })
 
     const onProductSubmit = (formData) => {
+        console.log(formData);
         onSubmit({
             ...formData,
             ingredientsList,
@@ -132,7 +133,12 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                 <Col>
                     <Form.Group controlId="manufacAndPackagingLoc">
                         <Form.Label>Manufacturing & Packaging Locations:</Form.Label>
-                        <Map locations={locations} setLocations={setLocations} errors={{ manufacturingLoc: errors.manufacturingLoc, packagingLoc: errors.packagingLoc }} />
+                        <Map
+                            locations={locations}
+                            setLocations={setLocations}
+                            errors={{ manufacturingLoc: errors.manufacturingLoc, packagingLoc: errors.packagingLoc }}
+                            clearErrors={() => clearErrors(["manufacturingLoc", "packagingLoc"])}
+                        />
                     </Form.Group>
                     <Form.Group className="mb-5" controlId="transportWeight">
                         <Form.Label>Transport Weight: <b>{ sliderVals.transportWeight }</b></Form.Label>

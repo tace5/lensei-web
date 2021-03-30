@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import {get, useForm} from "react-hook-form";
 import AsyncSelect from 'react-select/async'
 import IngredientsListItem from "./IngredientsListItem.js";
 import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from "react-bootstrap";
@@ -9,7 +9,7 @@ import axios from "axios";
 import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
-    const { register, handleSubmit, reset, setError, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm();
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [newIngredientRating, setNewIngredientRating] = useState(5);
@@ -42,7 +42,9 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                     newIngredient
                 ])
 
-                reset({ name: "", rating: 5, description: ""});
+                setValue("name", "");
+                setValue("rating", 5);
+                setValue("description", "");
             })
             .catch(err => {
                 const errors = err.response.data;
@@ -122,7 +124,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                 </Col>
                             </Row>
                             <div className={ styles["new-ingredient-form-btn-container"] }>
-                                <Button onClick={ handleSubmit(handleSubmitIngredient) }>SUBMIT</Button>
+                                <Button onClick={handleSubmit(handleSubmitIngredient)}>SUBMIT</Button>
                             </div>
                         </div>
                     </Accordion.Collapse>
