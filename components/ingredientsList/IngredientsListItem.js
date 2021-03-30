@@ -21,10 +21,7 @@ export default function IngredientsListItem({ ingredient, onRemove }) {
                     <b>{ ingredient.label }</b>
                     <div className={styles["ingredients-list-item-info"]}>
                         <span className="mr-3 d-flex align-items-center">Rating:
-                            <div
-                                className={"ml-2 border " + styles2["ingredient-rating"]}
-                                style={{backgroundColor: calcRatingColor(ingredient.rating)}}
-                            >{ ingredient.rating }</div>
+                            <div className={calcRatingColor(ingredient.rating) + " ml-2 border " + styles2["ingredient-rating"]}>{ ingredient.rating }</div>
                         </span>
                         <Button style={{width: 40, color: "#dc3545" }} className="mr-3 bg-transparent border-0" onClick={handleRemoveClick} size="lg" variant="danger"><FontAwesomeIcon icon={faTrashAlt} /></Button>
                     </div>

@@ -95,7 +95,7 @@ export default function ViewProduct({ product }) {
         <Layout title={product.label} header={header} breadcrumbs={breadCrumbs}>
             <ProductForm
                 onSubmit={onProductUpdate}
-                submitBtnText="Save Product"
+                submitBtnText="SAVE PRODUCT"
                 type="update"
                 formData={{
                     ingredients: product.ingredientsList,

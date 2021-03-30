@@ -94,7 +94,7 @@ export default function ViewSuggestion({ suggestion }) {
             <div>
                 { title }
                 <div style={{float: "right"}}>
-                    <Button onClick={onSuggestionReject} variant="danger" size="lg">Reject</Button>
+                    <Button onClick={onSuggestionReject} variant="danger" size="lg">REJECT</Button>
                 </div>
             </div>
         </h2>
@@ -107,7 +107,7 @@ export default function ViewSuggestion({ suggestion }) {
             </div>
             <ProductForm
                 onSubmit={onSuggestionApprove}
-                submitBtnText="Add Suggestion"
+                submitBtnText="ADD SUGGESTION"
                 type="add"
                 formData={{
                     name: null,

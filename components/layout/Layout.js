@@ -10,7 +10,7 @@ export default function Layout({ title, header, breadcrumbs, children }) {
     const { user } = useAuth();
 
     return (
-        <div>
+        <div className="bg-secondary">
             <Head>
                 <title>Snapshop - { title }</title>
                 <meta charSet="utf-8" />

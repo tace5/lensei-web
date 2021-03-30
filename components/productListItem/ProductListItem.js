@@ -27,8 +27,7 @@ export default function ProductListItem({ product, onDelete, onView }) {
                         <span className="mr-4 d-flex align-items-center">
                             Rating:
                             <div
-                                className={"ml-2 border " + styles["overall-rating"]}
-                                style={{backgroundColor: calcRatingColor(product.overallRating)}}
+                                className={calcRatingColor(product.overallRating) + " ml-2 border " + " " + styles["overall-rating"]}
                             >{ product.overallRating }</div>
                         </span>
                         <Button style={{width: 40, color: "#007bff" }} className="mr-3 bg-transparent border-0" onClick={onViewClick}><FontAwesomeIcon size="lg" icon={ faEdit } /></Button>
@@ -40,13 +39,13 @@ export default function ProductListItem({ product, onDelete, onView }) {
             <AccordionCollapse className="border-bottom" eventKey={ product.id }>
                 <Card.Body className={"p-4"}>
                     <Row className="mb-5 mt-3 d-flex justify-content-around">
-                        <Col style={{backgroundColor: calcRatingColor(product.companyRating)}} className={"text-center border " + styles["product-rating"]}>
+                        <Col className={calcRatingColor(product.companyRating) + " text-center border " + styles["product-rating"]}>
                             <b>Company</b> <br /> <b style={{fontSize: "52px"}}>{ product.companyRating }</b>
                         </Col>
-                        <Col style={{backgroundColor: calcRatingColor(product.ingredientsRating)}} className={"text-center border " + styles["product-rating"]}>
+                        <Col className={calcRatingColor(product.ingredientsRating) + " text-center border " + styles["product-rating"]}>
                             Ingredients <br /><b style={{fontSize: "52px"}}>{ product.ingredientsRating }</b>
                         </Col>
-                        <Col style={{backgroundColor: calcRatingColor(product.packagingRating)}} className={"text-center border " + styles["product-rating"]}>
+                        <Col className={calcRatingColor(product.packagingRating) + " text-center border " + styles["product-rating"]}>
                             Packaging <br /><b style={{fontSize: "52px"}}>{ product.packagingRating }</b>
                         </Col>
                     </Row>
