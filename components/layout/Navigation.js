@@ -32,7 +32,7 @@ export default function Navigation({ user }) {
 
     return (
         <Navbar bg="primary" className={ "border-bottom navbar-light " + styles.navbar } expand="lg">
-            <Navbar.Brand href="#products">Snapshop Admin</Navbar.Brand>
+            <Navbar.Brand href="#products"><img className="logo-white" src="/logo-white.svg" /></Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
