@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react";
 import {GoogleMap, Marker, Polyline, useJsApiLoader} from "@react-google-maps/api";
 import {FormControl, Spinner} from "react-bootstrap";
 
-export default function Map({ locations, setLocations, errors }) {
+export default function Map({ locations, setLocations, errors, clearErrors }) {
     const [center, setCenter] = useState({lat: 0, lng: 0});
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyC3_D-3T8rx1pzDbpITpZmau9H-3vR1P9w"
@@ -10,6 +10,8 @@ export default function Map({ locations, setLocations, errors }) {
     const mapRef = useRef(null);
 
     const handleClick = ({ latLng }) => {
+        clearErrors();
+
         const location = {
             lat: latLng.lat(),
             lng: latLng.lng()
