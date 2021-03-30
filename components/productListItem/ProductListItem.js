@@ -1,5 +1,5 @@
 import {Row, Col, Accordion, AccordionCollapse, AccordionToggle, Button, Card, Modal} from "react-bootstrap";
-import styles from "./ProductListItem.module.css";
+import styles from "./ProductListItem.module.scss";
 import React from "react";
 import {faAngleDown, faEdit, faThumbsDown, faThumbsUp, faTrashAlt} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

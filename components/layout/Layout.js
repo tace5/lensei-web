@@ -2,7 +2,7 @@ import React from "react";
 import Head from 'next/head';
 import Navigation from "./Navigation.js";
 
-import styles from "./Layout.module.css";
+import styles from "./Layout.module.scss";
 import { Breadcrumb, BreadcrumbItem} from "react-bootstrap";
 import { useAuth } from "../../firebase/auth.js";
 

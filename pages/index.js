@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { refreshToken } from "../firebase/auth.js";
 import Head from 'next/head'
-import styles from '../styles/Login.module.css'
+import styles from '../styles/pages/Login.module.scss'
 import { firebase } from '../firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";

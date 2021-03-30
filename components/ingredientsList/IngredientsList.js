@@ -4,7 +4,7 @@ import AsyncSelect from 'react-select/async'
 import IngredientsListItem from "./IngredientsListItem.js";
 import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from "react-bootstrap";
 
-import styles from "./IngredientsList.module.css";
+import styles from "./IngredientsList.module.scss";
 import axios from "axios";
 import {calcRatingColor} from "../../helpers/rating.js";
 

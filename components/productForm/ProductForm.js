@@ -5,7 +5,7 @@ import IngredientsList from "../ingredientsList/IngredientsList.js";
 import Map from "../map/Map.js";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import styles from "./ProductForm.module.css";
+import styles from "./ProductForm.module.scss";
 import { calcRatingColor } from "../../helpers/rating.js";
 
 export default function ProductForm({ onSubmit, formData, submitBtnText }) {
