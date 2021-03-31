@@ -39,5 +39,5 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 ## Credentials
 
 ## Future Plans
-[ ] Plan1
-[ ] Plan2
+- [ ] Plan1
+- [ ] Plan2
