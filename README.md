@@ -13,9 +13,6 @@ This is still under development. Hence, you may encounter bugs (we hope not), bu
 ## Demo Video
 You may find our two minute demonstration video [here]().
 
-## Demo
-You may find our two minute demonstration video [here](https://youtu.be/Vm8hjFXK3oc).
-
 ## Getting Started
 1\. Clone the repository.
 
