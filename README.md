@@ -11,7 +11,7 @@ As part of the solution there is a Flutter Application (Check the [repository](h
 This is still under development. Hence, you may encounter bugs (we hope not), but it is possible. You can read more about our future plans at the end of the document.
 
 ## Demo Video
-You may find our two minute demonstration video [here]().
+You may find our two minute demonstration video [here](https://youtu.be/Vm8hjFXK3oc).
 
 ## Getting Started
 1\. Clone the repository.
