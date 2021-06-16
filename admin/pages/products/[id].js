@@ -73,9 +73,9 @@ export default function ViewProduct({ product }) {
             <div>
                 { product.name }
                 <div style={{float: "right"}}>
-                    <span className="font-weight-bold mr-3 color-good" style={{fontSize: "24px"}}>{ product.likes }</span>
+                    <span className="font-weight-bold me-3 color-good" style={{fontSize: "24px"}}>{ product.likes }</span>
                     <FontAwesomeIcon
-                        className="mr-4 color-good"
+                        className="me-4 color-good"
                         size="xs"
                         icon={faThumbsUp}
                         flip="horizontal" />
@@ -84,7 +84,7 @@ export default function ViewProduct({ product }) {
                         size="xs"
                         icon={faThumbsDown}
                     />
-                    <span className="font-weight-bold ml-3 color-poor" style={{fontSize: "24px"}}>{ product.dislikes }</span>
+                    <span className="font-weight-bold ms-3 color-poor" style={{fontSize: "24px"}}>{ product.dislikes }</span>
                 </div>
             </div>
         </h2>

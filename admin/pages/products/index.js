@@ -110,7 +110,7 @@ export default function ProductsList({ products, initialSearchInput }) {
                 <FormControl defaultValue={initialSearchInput} onChange={handleSearch} type="text" placeholder="Search" />
             </InputGroup>
             <InfiniteScroll
-                className={allProducts.length !== 0 ? "border-top border-left border-right" : ""}
+                className={allProducts.length !== 0 ? "border border-bottom" : ""}
                 dataLength={allProducts.length}
                 next={loadProducts}
                 hasMore={hasMoreProducts}

@@ -159,7 +159,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                     <Form.Group controlId="companyRating">
                         <Form.Label className="d-flex align-items-center">
                             Company:
-                            <div className={calcRatingColor(sliderVals.companyRating) + " ml-2 border " + styles["rating"]}>{ sliderVals.companyRating }</div>
+                            <div className={calcRatingColor(sliderVals.companyRating) + " ms-2 border " + styles["rating"]}>{ sliderVals.companyRating }</div>
                         </Form.Label>
                         <FormControl
                             defaultValue={sliderVals.companyRating}
@@ -187,7 +187,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                         <Form.Label className="d-flex align-items-center">
                             Packaging:
                             <div
-                                className={calcRatingColor(sliderVals.packagingRating) + " ml-2 border " + styles["rating"]}
+                                className={calcRatingColor(sliderVals.packagingRating) + " ms-2 border " + styles["rating"]}
                             >{ sliderVals.packagingRating }</div>
                         </Form.Label>
                         <FormControl
@@ -207,7 +207,7 @@ export default function ProductForm({ onSubmit, formData, submitBtnText }) {
                         <Form.Label className="d-flex align-items-center">
                             Overall:
                             <div
-                                className={calcRatingColor(sliderVals.overallRating) + " ml-2 border " + styles["rating"]}
+                                className={calcRatingColor(sliderVals.overallRating) + " ms-2 border " + styles["rating"]}
                             >{ sliderVals.overallRating }</div>
                         </Form.Label>
                         <FormControl

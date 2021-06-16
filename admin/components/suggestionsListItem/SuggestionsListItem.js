@@ -3,7 +3,8 @@ import styles from "./SuggestionsListItem.module.scss";
 import React from "react";
 
 export default function SuggestionsListItem({ onViewClick, suggestion }) {
-    const daysSinceSuggestion = new Date().getDate() - new Date(suggestion.dateCreated).getDate();
+    const timeSinceSuggestion = new Date().getTime() - new Date(suggestion.dateCreated).getTime();
+    const daysSinceSuggestion = Math.round(timeSinceSuggestion / (1000 * 3600 * 24));
     const daysSinceSuggestionString = daysSinceSuggestion === 0 ? "Today" : daysSinceSuggestion + " Days Ago";
 
     return (
@@ -13,8 +14,8 @@ export default function SuggestionsListItem({ onViewClick, suggestion }) {
                     <b>{ suggestion.author.fullName }</b>: { suggestion.format + "-" + suggestion.code }
                 </div>
                 <div className="d-flex flex-row">
-                    <div className="d-flex align-items-center mr-3">Suggested {daysSinceSuggestionString}</div>
-                    <Button className="mr-2" onClick={() => onViewClick(suggestion.id)} size="sm">Open</Button>
+                    <div className="d-flex align-items-center me-3">Suggested {daysSinceSuggestionString}</div>
+                    <Button className="me-2" onClick={() => onViewClick(suggestion.id)} size="sm">Open</Button>
                 </div>
             </Card.Header>
         </Card>

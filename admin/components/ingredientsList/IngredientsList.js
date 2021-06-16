@@ -97,7 +97,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                     <InputGroup>
                                         <FormLabel className="d-flex align-items-center">
                                             Rating:
-                                            <div className={calcRatingColor(newIngredientRating) + " ml-2 border " + styles["ingredient-rating"]}>{ newIngredientRating }</div>
+                                            <div className={calcRatingColor(newIngredientRating) + " ms-2 border " + styles["ingredient-rating"]}>{ newIngredientRating }</div>
                                         </FormLabel>
                                         <FormControl
                                             name="rating"

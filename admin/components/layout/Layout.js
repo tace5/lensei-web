@@ -4,7 +4,7 @@ import Navigation from "./Navigation.js";
 
 import styles from "./Layout.module.scss";
 import { Breadcrumb, BreadcrumbItem} from "react-bootstrap";
-import { useAuth } from "../../firebase/auth.js";
+import { useAuth } from "shared/firebase/auth.js";
 
 export default function Layout({ title, header, breadcrumbs, children }) {
     const { user } = useAuth();

@@ -24,13 +24,13 @@ export default function ProductListItem({ product, onDelete, onView }) {
                 <div className={styles["product-list-item-data"]}>
                     <b>{ product.label }</b>
                     <div className={styles["ingredients-list-item-info"]}>
-                        <span className="mr-4 d-flex align-items-center">
+                        <span className="me-4 d-flex align-items-center">
                             Rating:
                             <div
-                                className={calcRatingColor(product.overallRating) + " ml-2 border " + " " + styles["overall-rating"]}
+                                className={calcRatingColor(product.overallRating) + " ms-2 border " + " " + styles["overall-rating"]}
                             >{ product.overallRating }</div>
                         </span>
-                        <Button style={{ }} className={"mr-3 bg-transparent border-0 " + styles["btn-edit"]} onClick={onViewClick}><FontAwesomeIcon size="lg" icon={ faEdit } /></Button>
+                        <Button style={{ }} className={"me-3 bg-transparent border-0 " + styles["btn-edit"]} onClick={onViewClick}><FontAwesomeIcon size="lg" icon={ faEdit } /></Button>
                         <Button style={{width: 40, color: "#dc3545" }} className={"bg-transparent border-0 " + styles["btn-remove"]} onClick={onDeleteClick} variant="danger"><FontAwesomeIcon size="lg" icon={faTrashAlt} /></Button>
                     </div>
                 </div>
@@ -53,9 +53,9 @@ export default function ProductListItem({ product, onDelete, onView }) {
                         <Col>Price: <b>£{ product.price }</b></Col>
                         <Col>
                             <div style={{float: "right"}}>
-                                <span className={"font-weight-bold mr-3 " + styles["likes"]}>{ product.likes }</span>
+                                <span className={"font-weight-bold me-3 " + styles["likes"]}>{ product.likes }</span>
                                 <FontAwesomeIcon
-                                    className={"mr-4 " + styles["likes-icon"]}
+                                    className={"me-4 " + styles["likes-icon"]}
                                     size="1x"
                                     icon={faThumbsUp}
                                     flip="horizontal" />
@@ -64,7 +64,7 @@ export default function ProductListItem({ product, onDelete, onView }) {
                                     size="1x"
                                     icon={faThumbsDown}
                                 />
-                                <span className={"font-weight-bold ml-3 " + styles["dislikes"]}>{ product.dislikes }</span>
+                                <span className={"font-weight-bold ms-3 " + styles["dislikes"]}>{ product.dislikes }</span>
                             </div>
                         </Col>
                     </Row>
