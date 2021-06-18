@@ -1,18 +1,19 @@
 
 @import "variables";
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 html,
 body {
     padding: 0;
     margin: 0;
-    font-family: Roboto, Oxygen,
+    font-family: 'Roboto', Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     color: $primary-text;
 }
 
 h1, h2, h3, h4, h5, h6, label, a {
-    font-family: "Lora", Roboto, Oxygen,
+    font-family: "Lora", 'Roboto', Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 

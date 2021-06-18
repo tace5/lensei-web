@@ -1,0 +1,15 @@
+
+@import "styles/variables";
+
+.custom-nav {
+    padding: 30px 35px;
+
+    .custom-nav-link {
+        margin-left: 50px;
+        color: $primary-text !important;
+    }
+
+    .custom-nav-link:hover {
+        color: $primary !important;
+    }
+}
