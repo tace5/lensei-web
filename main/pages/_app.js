@@ -1,7 +1,11 @@
-import '../styles/globals.css'
+import React from "react";
+import { AuthProvider } from 'shared/firebase/auth.js';
+import '../styles/main.scss';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+export default function App({ Component, pageProps }) {
+    return (
+        <AuthProvider>
+            <Component {...pageProps} />
+        </AuthProvider>
+    )
 }
-
-export default MyApp

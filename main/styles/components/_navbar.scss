@@ -1,0 +1,11 @@
+
+@import "../variables";
+
+.navbar {
+    padding: 30px 35px;
+
+    .nav-link {
+        margin-left: 50px;
+        color: $primary-text !important;
+    }
+}

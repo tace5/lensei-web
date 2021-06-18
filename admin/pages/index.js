@@ -1,12 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { refreshToken } from "../../shared/firebase/auth.js";
+import { refreshToken } from "shared/firebase/auth.js";
 import Head from 'next/head'
 import styles from '../styles/pages/Login.module.scss'
-import { firebase } from '../../shared/firebase/firebaseClient.js';
+import { firebase } from 'shared/firebase/firebaseClient.js';
 import axios from 'axios';
 import { Form, Button } from "react-bootstrap";
-import { useRouter } from "next/router.js";
+import { useRouter } from "next/router";
 
 export default function Login() {
     const { register, handleSubmit, setError, formState: { errors } } = useForm();
