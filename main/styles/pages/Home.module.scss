@@ -1,48 +1,56 @@
 
 @import "styles/variables";
 
-.section {
-    padding: 50px 100px;
-    background: $tertiary;
+.green-underline {
+    background-image: url("/img/green-underline.svg");
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
 }
 
-.main-section {
-    background: $secondary;
-    border-radius: 0 0 40px 40px !important;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 5px;
+.sub-heading {
+    font-size: 24px;
+}
 
-    .green-underline {
-        background-image: url("/green-underline.svg");
+.main-section-right {
+    width: 500px;
+
+    .landing-page-phone {
+        height: 400px;
+        background-image: url("/img/phone-graphic.png");
         background-repeat: no-repeat;
-        background-position: bottom;
         background-size: contain;
+
+        .landing-page-phone-screen {
+            height: 322px;
+            width: 158px;
+            margin-left: 33px;
+            padding-top: 50px;
+
+            .landing-page-phone-view {
+                height: 322px;
+                width: 158px;
+            }
+        }
+    }
+}
+
+.main-section-left {
+    min-width: 275px;
+
+    .playstore-badge img {
+        width: 140px;
     }
 
-    .sub-heading {
-        font-size: 24px;
+    .appstore-badge img {
+        width: 120px !important;
     }
 
     a {
         font-family: Roboto, sans-serif;
-        text-decoration: underline !important;
-        cursor: pointer;
     }
+}
 
-    .landing-page-graphic {
-        width: 500px;
-    }
-
-    .main-section-left {
-        min-width: 275px;
-
-        .playstore-badge img {
-            width: 140px;
-        }
-
-        .appstore-badge img {
-            width: 120px !important;
-        }
-    }
+.main-section-content {
+    background: $secondary;
 }

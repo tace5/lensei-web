@@ -3,6 +3,11 @@
 
 .custom-nav {
     padding: 30px 35px;
+    text-decoration: none;
+
+    .brand-text {
+        color: $primary;
+    }
 
     .custom-nav-link {
         margin-left: 50px;

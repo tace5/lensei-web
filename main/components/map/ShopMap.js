@@ -11,11 +11,7 @@ export default function ShopMap({ onSearch, onSearchTextChange, searchValue}) {
     })
 
     const options = {
-        mapTypeControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false,
-        draggableCursor: "default"
+        disableDefaultUI: true
     }
 
     if (loadError) {
@@ -32,7 +28,8 @@ export default function ShopMap({ onSearch, onSearchTextChange, searchValue}) {
                     <GoogleMap
                         mapContainerStyle={{
                             width: '100%',
-                            height: '400px'
+                            height: '400px',
+                            borderRadius: '0 0 10px 10px'
                         }}
                         zoom={2}
                         center={{
