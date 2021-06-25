@@ -1,0 +1,56 @@
+
+@import "styles/variables";
+
+.green-underline {
+    background-image: url("/img/green-underline.svg");
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+}
+
+.sub-heading {
+    font-size: 24px;
+}
+
+.main-section-right {
+    width: 500px;
+
+    .landing-page-phone {
+        height: 400px;
+        background-image: url("/img/phone-graphic.png");
+        background-repeat: no-repeat;
+        background-size: contain;
+
+        .landing-page-phone-screen {
+            height: 322px;
+            width: 158px;
+            margin-left: 33px;
+            padding-top: 50px;
+
+            .landing-page-phone-view {
+                height: 322px;
+                width: 158px;
+            }
+        }
+    }
+}
+
+.main-section-left {
+    min-width: 275px;
+
+    .playstore-badge img {
+        width: 140px;
+    }
+
+    .appstore-badge img {
+        width: 120px !important;
+    }
+
+    a {
+        font-family: Roboto, sans-serif;
+    }
+}
+
+.main-section-content {
+    background: $secondary;
+}

@@ -1,0 +1,70 @@
+
+@import "../../styles/variables";
+
+.product-list-item-header {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.product-list-item-data {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+.ingredients-list-item-info {
+    display: flex;
+    align-items: center;
+}
+
+.overall-rating {
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    padding: 2px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+}
+
+.product-rating {
+    border-radius: 100px;
+    color: white;
+    width: 150px;
+    height: 150px;
+    padding: 30px 20px 20px;
+    flex-basis: auto;
+    flex-grow: 0;
+}
+
+.likes {
+    color: $good;
+    font-size: 18px;
+}
+
+.likes-icon {
+    color: $good;
+}
+
+.dislikes {
+    color: $poor;
+    font-size: 18px;
+}
+
+.dislikes-icon {
+    color: $poor;
+}
+
+.btn-edit {
+    width: 40px;
+    color: $primary;
+}
+
+.btn-remove {
+    width: 40px;
+    color: $danger;
+}

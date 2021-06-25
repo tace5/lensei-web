@@ -1,0 +1,29 @@
+
+@import "styles/variables";
+
+.content {
+    background: $tertiary;
+}
+
+.footer {
+    color: $secondary;
+    padding: 30px 35px;
+    z-index: -1;
+
+    .footer-heading {
+        color: $tertiary-medium;
+    }
+
+    .logo-large {
+        width: 150px;
+    }
+
+    a {
+        color: $secondary !important;
+        margin-right: 100px;
+
+        &:hover {
+            color: $tertiary-darker !important;
+        }
+    }
+}
