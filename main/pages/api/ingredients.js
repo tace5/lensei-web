@@ -1,4 +1,4 @@
-import {searchIngredients, createIngredient, ingredientSchema} from "../../firebase/firestore/ingredients.js";
+import {searchIngredients, createIngredient, ingredientSchema} from "shared/firebase/firestore/ingredients.js";
 
 export default function handle(req, res) {
     switch (req.method) {
@@ -17,7 +17,7 @@ export default function handle(req, res) {
             const newIngredient = req.body;
 
             ingredientSchema.validate(newIngredient, { abortEarly: false })
-                .then(() => createIngredient(newIngredient.name, newIngredient.rating, newIngredient.description))
+                .then(() => createIngredient(newIngredient.name, newIngredient.alias, newIngredient.rating, newIngredient.rationale))
                 .then(newIngredient => res.status(200).json(newIngredient))
                 .catch(err => {
                     if (err.name === "ValidationError") {

@@ -1,9 +1,10 @@
 import React, {useRef, useState} from "react";
-import {GoogleMap, Marker, Polyline, useJsApiLoader} from "@react-google-maps/api";
+import {GoogleMap, Marker, useJsApiLoader} from "@react-google-maps/api";
 import {FormControl, Spinner} from "react-bootstrap";
 
-export default function Map({ locations, setLocations, errors, clearErrors }) {
-    const [center, setCenter] = useState({lat: 0, lng: 0});
+export default function Map({ location, setLocation, error, clearErrors }) {
+    const [center, setCenter] = useState({lat:0, lng:0});
+
     const { isLoaded, loadError } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyC3_D-3T8rx1pzDbpITpZmau9H-3vR1P9w"
     })
@@ -12,22 +13,12 @@ export default function Map({ locations, setLocations, errors, clearErrors }) {
     const handleClick = ({ latLng }) => {
         clearErrors();
 
-        const location = {
+        const newLocation = {
             lat: latLng.lat(),
             lng: latLng.lng()
         }
 
-        if (locations.manufacturingLoc === null || locations.packagingLoc !== null) {
-            setLocations({
-                manufacturingLoc: location,
-                packagingLoc: null
-            })
-        } else {
-            setLocations({
-                ...locations,
-                packagingLoc: location
-            })
-        }
+        setLocation(newLocation);
     }
 
     if (loadError) {
@@ -42,14 +33,14 @@ export default function Map({ locations, setLocations, errors, clearErrors }) {
         draggableCursor: "default"
     }
 
+    const borderDanger = error ? "border-danger" : "";
+
     const onCenterChanged = () => {
         if (isLoaded && mapRef.current !== null) {
             const newCenter = mapRef.current.state.map.getCenter();
             setCenter(newCenter);
         }
     }
-
-    const borderDanger = errors.manufacturingLoc || errors.packagingLoc ? "border-danger" : "";
 
     if (isLoaded) {
         return (
@@ -67,23 +58,11 @@ export default function Map({ locations, setLocations, errors, clearErrors }) {
                         onClick={handleClick}
                         options={options}
                     >
-                        {locations.manufacturingLoc !== null
-                            ? <Marker label="Manufacturing" draggable position={locations.manufacturingLoc}/> : ""}
-                        {locations.packagingLoc !== null
-                            ? <Marker label="Packaging" draggable position={locations.packagingLoc}/> : ""}
-                        {locations.packagingLoc !== null
-                            ? <Polyline
-                                geodesic={true}
-                                path={[locations.manufacturingLoc, locations.packagingLoc]}
-                                options={{
-                                    strokeColor: "#007bff"
-                                }}
-
-                            /> : ""}
+                        {location.lat !== null && location.lng !== null
+                            ? <Marker label="Production" draggable position={location}/> : ""}
                     </GoogleMap>
                 </div>
-                { errors.manufacturingLoc && <FormControl.Feedback style={{ display: "block" }} type="invalid">{ errors.manufacturingLoc.message }</FormControl.Feedback> }
-                { errors.packagingLoc && <FormControl.Feedback style={{ display: "block" }} type="invalid">{ errors.packagingLoc.message }</FormControl.Feedback> }
+                { error && <FormControl.Feedback style={{ display: "block" }} type="invalid">{ error.message }</FormControl.Feedback> }
             </div>
         )
     }

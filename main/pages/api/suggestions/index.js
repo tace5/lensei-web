@@ -1,4 +1,4 @@
-import { getNextSuggestionsPage } from "../../../firebase/firestore/suggestions.js";
+import { getNextSuggestionsPage } from "../../../../shared/firebase/firestore/suggestions.js";
 
 export default function handle(req, res) {
     if (req.method === "POST") {

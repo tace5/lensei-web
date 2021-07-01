@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import nookies from "nookies";
 import { firebaseAdmin } from "../../../main/firebase/firebaseAdmin.js";
-import { getProduct } from "../../../main/firebase/firestore/products.js";
+import { getProduct } from "shared/firebase/firestore/products.js";
 import Layout from "../../components/layout/Layout.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useRouter } from "next/router.js";
+import {getProducers} from "shared/firebase/firestore/producers.js";
+import {getTags} from "shared/firebase/firestore/tags.js";
+import {getPackagings} from "shared/firebase/firestore/packagings.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -25,33 +26,17 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.query;
     const product = await getProduct(id);
-    return { props: { product } };
+    const producers = await getProducers();
+    const tags = await getTags();
+    const packagings = await getPackagings();
+    return { props: { product, producers, tags, packagings } };
 }
 
-export default function ViewProduct({ product }) {
+export default function ViewProduct({ product, producers, tags, packagings }) {
     const router = useRouter();
 
     const onProductUpdate = async (formData) => {
-        const {
-            price,
-            locations,
-            transportWeight,
-            companyRating,
-            packagingRating,
-            overallRating,
-            ...data
-        } = formData;
-
-        await axios.put("/api/products/" + product.id, {
-            price: parseFloat(price),
-            manufacturingLoc: locations.manufacturingLoc,
-            packagingLoc: locations.packagingLoc,
-            transportWeight: parseFloat(transportWeight),
-            companyRating: parseInt(companyRating),
-            packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating),
-            ...data
-        })
+        await axios.put("/api/products/" + product.id, formData)
             .then(() => {
                 router.push("/products")
             })
@@ -72,20 +57,6 @@ export default function ViewProduct({ product }) {
         <h2 className="mb-4">
             <div>
                 { product.name }
-                <div style={{float: "right"}}>
-                    <span className="font-weight-bold me-3 color-good" style={{fontSize: "24px"}}>{ product.likes }</span>
-                    <FontAwesomeIcon
-                        className="me-4 color-good"
-                        size="xs"
-                        icon={faThumbsUp}
-                        flip="horizontal" />
-                    <FontAwesomeIcon
-                        className="color-poor"
-                        size="xs"
-                        icon={faThumbsDown}
-                    />
-                    <span className="font-weight-bold ms-3 color-poor" style={{fontSize: "24px"}}>{ product.dislikes }</span>
-                </div>
             </div>
         </h2>
     )
@@ -100,6 +71,9 @@ export default function ViewProduct({ product }) {
                     ingredients: product.ingredientsList,
                     ...product
                 }}
+                producers={producers}
+                tags={tags}
+                packagings={packagings}
             />
         </Layout>
     )

@@ -6,7 +6,7 @@ import { Row, Col, Accordion, Button, FormControl, FormLabel, InputGroup } from 
 
 import styles from "./IngredientsList.module.scss";
 import axios from "axios";
-import {calcRatingColor} from "../../../main/helpers/rating.js";
+import {calcRatingColor} from "../../helpers/rating.js";
 
 export default function IngredientsList({ loadIngredientsOptions, updateIngredientsList, ingredientsList }) {
     const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm();
@@ -30,8 +30,8 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
         updateIngredientsList(ingredientsList.filter(ingredient => ingredient.id !== ingredientId));
     }
 
-    const handleSubmitIngredient = ({ name, rating, description }) => {
-        const data = { name, rating: parseInt(rating), description };
+    const handleSubmitIngredient = ({ name, alias, rating, rationale }) => {
+        const data = { name, alias, rating: parseInt(rating), rationale };
 
         axios.post("/api/ingredients", data)
             .then(res => {
@@ -43,10 +43,12 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                 ])
 
                 setValue("name", "");
+                setValue("alias", "");
                 setValue("rating", 5);
-                setValue("description", "");
+                setValue("rationale", "");
             })
             .catch(err => {
+                console.log(err)
                 const errors = err.response.data;
 
                 errors.forEach(error => {
@@ -80,7 +82,7 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                         <div className={ styles["new-ingredient-form"] }>
                             <Row className="m-3 mb-4">
                                 <Col>
-                                    <InputGroup>
+                                    <InputGroup className="mb-3">
                                         <InputGroup.Prepend>
                                             <InputGroup.Text>Name:</InputGroup.Text>
                                         </InputGroup.Prepend>
@@ -88,9 +90,21 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                             ref={ register }
                                             name="name"
                                             placeholder="Ingredient Name"
-                                            isInvalid={ errors.name }
+                                            isInvalid={ errors.alias }
                                         />
-                                        { errors.name && <FormControl.Feedback type="invalid">{ errors.name.message }</FormControl.Feedback> }
+                                        { errors.alias && <FormControl.Feedback type="invalid">{ errors.alias.message }</FormControl.Feedback> }
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text>Alias:</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <FormControl
+                                            ref={ register }
+                                            name="alias"
+                                            placeholder="Ingredient Alias"
+                                            isInvalid={ errors.alias }
+                                        />
+                                        { errors.alias && <FormControl.Feedback type="invalid">{ errors.alias.message }</FormControl.Feedback> }
                                     </InputGroup>
                                 </Col>
                                 <Col>
@@ -116,10 +130,10 @@ export default function IngredientsList({ loadIngredientsOptions, updateIngredie
                                 <Col>
                                     <InputGroup>
                                         <InputGroup.Prepend>
-                                            <InputGroup.Text>Description:</InputGroup.Text>
+                                            <InputGroup.Text className="h-100">Rationale:</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <FormControl as="textarea" ref={ register } name="description" isInvalid={errors.description} />
-                                        { errors.description && <FormControl.Feedback type="invalid">{ errors.description.message }</FormControl.Feedback> }
+                                        <FormControl as="textarea" ref={ register } name="rationale" isInvalid={errors.rationale} />
+                                        { errors.rationale && <FormControl.Feedback type="invalid">{ errors.rationale.message }</FormControl.Feedback> }
                                     </InputGroup>
                                 </Col>
                             </Row>

@@ -1,4 +1,4 @@
-import { deleteSuggestion } from "../../../firebase/firestore/suggestions.js";
+import { deleteSuggestion } from "../../../../shared/firebase/firestore/suggestions.js";
 
 export default function handle(req, res) {
     const { id } = req.query;

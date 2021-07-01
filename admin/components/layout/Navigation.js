@@ -32,7 +32,7 @@ export default function Navigation({ user }) {
 
     return (
         <Navbar bg="primary" className={ "border-bottom navbar-light px-3 " + styles.navbar } expand="lg">
-            <Navbar.Brand href="/products"><img className="logo-white" src="/logo-white.svg" /></Navbar.Brand>
+            <Navbar.Brand href="/products"><img className="logo-white" src="/logo.svg" /></Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">

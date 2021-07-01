@@ -2,5 +2,5 @@
   "name": "snapshop-web",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["main", "shared", "admin"]
+  "workspaces": ["main", "shared", "admin", "portal"]
 }

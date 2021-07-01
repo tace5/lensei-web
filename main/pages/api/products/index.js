@@ -1,4 +1,4 @@
-import { createProduct, getNextProductPage, productSchema } from "../../../firebase/firestore/products.js";
+import { createProduct, getNextProductPage, productSchema } from "../../../../shared/firebase/firestore/products.js";
 
 export default async function handle(req, res) {
     switch (req.method) {

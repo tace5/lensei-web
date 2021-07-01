@@ -1,4 +1,4 @@
-import {database} from "../db.js";
+import {database} from "main/firebase/db.js";
 
 const usersRef = database.collection("users");
 

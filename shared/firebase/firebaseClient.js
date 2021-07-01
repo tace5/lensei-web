@@ -7,13 +7,13 @@ import 'firebase/storage';
 
 if (typeof window !== "undefined" && !firebase.apps.length) {
     firebase.initializeApp({
-        apiKey: "AIzaSyAqdE4C87tUtAZ7gMkV6RAh0GREAPJk_18",
-        authDomain: "solution-challenge-2021-1f487.firebaseapp.com",
-        projectId: "solution-challenge-2021-1f487",
-        storageBucket: "solution-challenge-2021-1f487.appspot.com",
-        messagingSenderId: "393961054342",
-        appId: "1:393961054342:web:ad21341a754afa3f8bb107",
-        measurementId: "G-SFWGBNN3T7"
+        apiKey: "AIzaSyDMbZyh9g_oUQF-hIr-xZxnVxO4x5hKe6A",
+        authDomain: "squirrel-c9d23.firebaseapp.com",
+        projectId: "squirrel-c9d23",
+        storageBucket: "squirrel-c9d23.appspot.com",
+        messagingSenderId: "4554017962",
+        appId: "1:4554017962:web:dacfd831a6bc158123d4d3",
+        measurementId: "G-L1NRNRRVZD"
     });
 }
 

@@ -39,12 +39,12 @@ export default function Login() {
     return (
         <div className={styles.container}>
             <Head>
-                <title>Lensei - Admin Portal</title>
+                <title>Squirrel - Portal</title>
             </Head>
 
             <h1 className="d-flex align-items-center fs-1 text-white">
                 <img style={{ width: 150 }} className="mb-5 me-4" src="/logo.svg" />
-                Squirrel Admin
+                Squirrel Portal
             </h1>
 
             <div className={styles["login-wrapper"]}>
