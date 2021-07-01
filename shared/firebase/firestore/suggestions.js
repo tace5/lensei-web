@@ -1,4 +1,4 @@
-import { database } from "../db.js";
+import { database } from "main/firebase/db.js";
 import { getUser } from "./users.js";
 
 const suggestionsRef = database.collection("suggestions");
@@ -7,13 +7,13 @@ export async function getNextSuggestionsPage(suggestionsPerPage, lastDocId) {
     let suggestionsDocs;
     if (lastDocId === null) {
         suggestionsDocs = await suggestionsRef
-            .orderBy("dateCreated")
+            .orderBy("createdAt")
             .limit(suggestionsPerPage)
             .get()
     } else {
         const lastDoc = await suggestionsRef.doc(lastDocId).get();
         suggestionsDocs = await suggestionsRef
-            .orderBy("dateCreated")
+            .orderBy("createdAt")
             .startAfter(lastDoc)
             .limit(suggestionsPerPage)
             .get();
@@ -21,14 +21,14 @@ export async function getNextSuggestionsPage(suggestionsPerPage, lastDocId) {
 
     let suggestions = [];
     suggestionsDocs.forEach(suggestionDoc => {
-        const { dateCreated, author, format, code } = suggestionDoc.data();
+        const { createdAt, author, format, code } = suggestionDoc.data();
 
         const suggestion = {
             id: suggestionDoc.id,
             author,
             format,
             code,
-            dateCreated: new Date(dateCreated._seconds * 1000).toUTCString()
+            createdAt: new Date(createdAt._seconds * 1000).toUTCString()
         }
 
         suggestions.push(suggestion);
@@ -54,7 +54,7 @@ export async function getSuggestion(suggestionId) {
         ...data,
         id: suggestionDoc.id,
         author,
-        dateCreated: new Date(data.dateCreated._seconds * 1000).toUTCString()
+        createdAt: new Date(data.createdAt._seconds * 1000).toUTCString()
     }
 }
 

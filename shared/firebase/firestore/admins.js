@@ -1,5 +1,5 @@
-import {database} from "../db.js";
-import {firebaseAdmin} from "../firebaseAdmin.js";
+import {database} from "main/firebase/db.js";
+import {firebaseAdmin} from "main/firebase/firebaseAdmin.js";
 
 const adminsRef = database.collection("admins");
 export const ACCESS_DENIED_ERROR = "AccessDeniedError";

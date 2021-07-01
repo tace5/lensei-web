@@ -6,7 +6,7 @@ import axios from "axios";
 import SuggestionsListItem from "../../components/suggestionsListItem/SuggestionsListItem.js";
 import nookies from "nookies";
 import { firebaseAdmin } from "../../../main/firebase/firebaseAdmin.js";
-import { getNextSuggestionsPage } from "../../../main/firebase/firestore/suggestions.js";
+import { getNextSuggestionsPage } from "shared/firebase/firestore/suggestions.js";
 import {useRouter} from "next/router.js";
 
 export const getServerSideProps = async (ctx) => {

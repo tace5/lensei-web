@@ -1,4 +1,4 @@
-import { deleteProduct, saveProduct, productSchema } from "../../../firebase/firestore/products.js";
+import { deleteProduct, saveProduct, productSchema } from "../../../../shared/firebase/firestore/products.js";
 
 export default function handle(req, res) {
     const { id } = req.query;

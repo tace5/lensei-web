@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import nookies from "nookies";
 import { firebaseAdmin } from "../../../main/firebase/firebaseAdmin.js";
-import { firebase } from "../../../main/firebase/firebaseClient.js";
-import { getSuggestion } from "../../../main/firebase/firestore/suggestions.js";
+import { firebase } from "shared/firebase/firebaseClient.js";
+import { getSuggestion } from "shared/firebase/firestore/suggestions.js";
 import Layout from "../../components/layout/Layout.js";
 import ImageGallery from "../../components/imageGallery/ImageGallery.js";
 import ProductForm from "../../components/productForm/ProductForm.js";
 import { useRouter } from "next/router.js";
 import axios from "axios";
 import { Button } from "react-bootstrap";
+import {getTags} from "shared/firebase/firestore/tags.js";
+import {getProducers} from "shared/firebase/firestore/producers.js";
+import {getPackagings} from "shared/firebase/firestore/packagings.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -26,10 +29,13 @@ export const getServerSideProps = async (ctx) => {
 
     const { id } = ctx.query;
     const suggestion = await getSuggestion(id);
-    return { props: { suggestion } }
+    const tags = await getTags();
+    const producers = await getProducers();
+    const packagings = await getPackagings();
+    return { props: { suggestion, tags, producers, packagings } }
 }
 
-export default function ViewSuggestion({ suggestion }) {
+export default function ViewSuggestion({ suggestion, tags, producers, packagings }) {
     const { author } = suggestion;
 
     const [suggestionImageUrls, setSuggestionImageUrls] = useState([]);
@@ -50,17 +56,8 @@ export default function ViewSuggestion({ suggestion }) {
         getAllImgUrls();
     }, [])
 
-    const onSuggestionApprove = async ({ price, locations, transportWeight, companyRating, packagingRating, overallRating, ...data }) => {
-        await axios.post("/api/products", {
-            price: parseFloat(price),
-            manufacturingLoc: locations.manufacturingLoc,
-            packagingLoc: locations.packagingLoc,
-            transportWeight: parseFloat(transportWeight),
-            companyRating: parseInt(companyRating),
-            packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating),
-            ...data
-        })
+    const onSuggestionApprove = async data => {
+        await axios.post("/api/products", data)
             .then(() => axios.delete("/api/suggestions/" + suggestion.id))
             .then(() => {
                 router.push("/suggestions");
@@ -74,7 +71,7 @@ export default function ViewSuggestion({ suggestion }) {
             })
     }
 
-    const title = author.fullName + ": " + suggestion.format + "-" + suggestion.code;
+    const title = suggestion.format + "-" + suggestion.code;
     const breadCrumbs = [
         {
             href: "/suggestions",
@@ -87,14 +84,14 @@ export default function ViewSuggestion({ suggestion }) {
     ]
 
     const header = (
-        <h2 className="mb-4">
+        <h3 className="mb-4">
             <div>
                 { title }
                 <div style={{float: "right"}}>
                     <Button onClick={onSuggestionReject} variant="danger" size="lg">REJECT</Button>
                 </div>
             </div>
-        </h2>
+        </h3>
     )
 
     return (
@@ -104,24 +101,21 @@ export default function ViewSuggestion({ suggestion }) {
             </div>
             <ProductForm
                 onSubmit={onSuggestionApprove}
-                submitBtnText="ADD SUGGESTION"
+                submitBtnText="ADD PRODUCT"
                 type="add"
+                producers={ producers }
+                tags={tags}
+                packagings={packagings}
                 formData={{
                     name: null,
-                    price: null,
                     ingredients: [],
-                    barcodeFormat: suggestion.format,
-                    barcode: suggestion.code,
-                    manufacturingLoc: null,
-                    packagingLoc: null,
-                    transportWeight: 5,
-                    companyRating: 5,
-                    companyName: "",
-                    companyRatingRationale: "",
-                    packagingRating: 5,
-                    packagingRatingRationale: "",
-                    overallRating: 5,
-                    overallRatingRationale: ""
+                    format: "",
+                    code: null,
+                    producedAt: {
+                        latitude: null,
+                        longitude: null
+                    },
+                    producer: null
                 }}
             />
         </Layout>

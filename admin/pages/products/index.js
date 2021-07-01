@@ -5,7 +5,7 @@ import {firebaseAdmin} from "../../../main/firebase/firebaseAdmin.js";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { InputGroup, FormControl, Spinner } from "react-bootstrap";
-import { getNextProductPage } from "../../../main/firebase/firestore/products.js";
+import { getNextProductPage } from "shared/firebase/firestore/products.js";
 import Layout from "../../components/layout/Layout.js";
 import ProductListItem from "../../components/productListItem/ProductListItem.js";
 import {useRouter} from "next/router.js";
@@ -26,11 +26,11 @@ export const getServerSideProps = async (ctx) => {
 
     const searchInput = ctx.query.searchInput;
     if (searchInput) {
-        const products = await getNextProductPage(10, null, "dateCreated", searchInput);
+        const products = await getNextProductPage(10, null, "createdOn", searchInput);
         ctx.query = {};
         return { props: { products, initialSearchInput: searchInput } };
     } else {
-        const products = await getNextProductPage(10, null, "dateCreated");
+        const products = await getNextProductPage(10, null, "createdOn");
         return { props: { products } };
     }
 };
@@ -48,7 +48,7 @@ export default function ProductsList({ products, initialSearchInput }) {
         const params = {
             productsPerPage: 10,
             lastDocId: lastProduct.id,
-            orderBy: "dateCreated",
+            orderBy: "createdOn",
             searchInput
         }
 
@@ -84,7 +84,7 @@ export default function ProductsList({ products, initialSearchInput }) {
 
         const params = {
             productsPerPage: 10,
-            orderBy: "dateCreated",
+            orderBy: "createdOn",
             searchInput: e.target.value
         }
 

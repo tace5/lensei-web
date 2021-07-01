@@ -6,6 +6,9 @@ import axios from "axios";
 import Layout from "../../components/layout/Layout.js";
 
 import ProductForm from "../../components/productForm/ProductForm.js";
+import {getProducers} from "shared/firebase/firestore/producers.js";
+import {getTags} from "shared/firebase/firestore/tags.js";
+import {getPackagings} from "shared/firebase/firestore/packagings.js";
 
 export const getServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
@@ -21,31 +24,24 @@ export const getServerSideProps = async (ctx) => {
         };
     }
 
-    return { props: {} };
+    const producers = await getProducers();
+    const tags = await getTags();
+    const packagings = await getPackagings();
+
+    return { props: { producers, tags, packagings } };
 };
 
-function AddProduct() {
+function AddProduct({ producers, tags, packagings }) {
     const router = useRouter();
 
     const onProductSubmit = async (formData) => {
         const {
-            price,
-            locations,
-            transportWeight,
-            companyRating,
-            packagingRating,
-            overallRating,
+            producedAt,
             ...data
         } = formData;
 
         await axios.post("/api/products", {
-            price: parseFloat(price),
-            manufacturingLoc: locations.manufacturingLoc,
-            packagingLoc: locations.packagingLoc,
-            transportWeight: parseFloat(transportWeight),
-            companyRating: parseInt(companyRating),
-            packagingRating: parseInt(packagingRating),
-            overallRating: parseInt(overallRating),
+            producedAt,
             ...data
         })
             .then(() => {
@@ -70,22 +66,19 @@ function AddProduct() {
                 onSubmit={onProductSubmit}
                 submitBtnText="ADD PRODUCT"
                 type="add"
+                producers={ producers }
+                tags={tags}
+                packagings={packagings}
                 formData={{
                     name: null,
-                    price: null,
                     ingredients: [],
-                    barcodeFormat: "",
-                    barcode: null,
-                    manufacturingLoc: null,
-                    packagingLoc: null,
-                    transportWeight: 5,
-                    companyRating: 5,
-                    companyName: "",
-                    companyRatingRationale: "",
-                    packagingRating: 5,
-                    packagingRatingRationale: "",
-                    overallRating: 5,
-                    overallRatingRationale: ""
+                    format: "",
+                    code: null,
+                    producedAt: {
+                        latitude: null,
+                        longitude: null
+                    },
+                    producer: null
                 }}
             />
         </Layout>
